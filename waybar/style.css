@@ -1,0 +1,100 @@
+* {
+  font-family: "FantasqueSansM Nerd Font";
+  font-weight: bold;
+  font-size: 14px;
+}
+
+window#waybar {
+  background: transparent;
+}
+
+#custom-power,
+#workspaces button,
+#taskbar button,
+#clock,
+#mpris,
+#tray,
+#pulseaudio,
+#custom-swaync {
+  background: #1e1e2e;
+  border-radius: 10px;
+  color: #cdd6f4;
+}
+
+/* Modules Left */
+#custom-power {
+  color: #f38ba8;
+  padding: 0 15px 0 10px;
+}
+
+#custom-power:hover {
+  background: #f38ba8;
+  color: #1e1e2e;
+}
+
+#workspaces button {
+  color: #cdd6f4;
+  min-width: 20px;
+  margin-right: 5px;
+}
+
+#workspaces button:last-child {
+  margin-right: 0px;
+}
+
+#workspaces button.active {
+  background: #89b4fa;
+  color: #1e1e2e;
+}
+
+#workspaces button:hover {
+  background: #45475a;
+}
+
+#taskbar button {
+  margin-right: 5px;
+}
+
+#taskbar button:last-child {
+  margin-right: 0px;
+}
+
+#taskbar button.active {
+  background: #89b4fa;
+  color: #1e1e2e;
+}
+
+#taskbar button:hover {
+  background: #45475a;
+}
+
+/* Modules Center */
+#clock {
+  padding: 0 10px;
+  color: #cba6f7;
+}
+
+/* Modules Right */
+#mpris {
+  padding: 0 10px;
+  color: #a6e3a1;
+}
+
+#tray {
+  padding: 0 10px;
+}
+
+#pulseaudio {
+  padding: 0 10px;
+  color: #fab387;
+}
+
+#custom-swaync {
+  padding: 0px 15px 0px 12px;
+  color: #74c7ec;
+}
+
+#custom-swaync:hover {
+  background: #74c7ec;
+  color: #1e1e2e;
+}

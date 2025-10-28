@@ -1,0 +1,8 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    disable-history: true;
+    icon-theme: "Papirus";
+}
+
+@theme "catppuccin-mocha.rasi"
