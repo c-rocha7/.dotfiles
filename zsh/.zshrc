@@ -15,3 +15,4 @@ alias ls="exa --icons"
 alias bat="bat --style=auto"
 alias ff="fastfetch"
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
+alias y='yazi'
