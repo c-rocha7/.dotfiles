@@ -5,19 +5,19 @@
 }
 
 {
-    "label": "shutdown",
-        "action": "systemctl poweroff",
-        "text": "Shutdown",
+    "label": "logout",
+    "action": "hyprctl dispatch exit 0",
+    "text": "Logout",
 }
 
 {
     "label": "reboot",
-        "action": "systemctl reboot",
-        "text": "Reboot",
+    "action": "systemctl reboot",
+    "text": "Reboot",
 }
 
 {
-    "label": "logout",
-        "action": "hyprctl dispatch exit 0",
-        "text": "Logout",
+    "label": "shutdown",
+    "action": "systemctl poweroff",
+    "text": "Shutdown",
 }
