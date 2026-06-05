@@ -8,7 +8,12 @@
   "margin-right": 1,
 
   /* Modules */
-  "modules-left": ["custom/power", "hyprland/workspaces", "wlr/taskbar"],
+  "modules-left": [
+    "custom/power",
+    "hyprland/workspaces",
+    "wlr/taskbar",
+    "custom/cava"
+  ],
   "modules-center": ["clock"],
   "modules-right": ["mpris", "tray", "pulseaudio", "custom/swaync"],
 
@@ -50,6 +55,10 @@
     "ignore-list": [],
     "tooltip": false
   },
+  "custom/cava": {
+    "format": "{}",
+    "exec": "~/.config/waybar/scripts/cava.sh"
+  },
 
   /* Modules Center */
   "clock": {
@@ -77,8 +86,8 @@
 
   /* Modules Right */
   "mpris": {
-    "format": "{player_icon}  {title} - {artist}",
-    "format-paused": "{status_icon}  {title} - {artist}",
+    "format": "{player_icon} {title} - {artist}",
+    "format-paused": "{status_icon} {title} - {artist}",
     "max-length": 50,
     "dynamic-len": 10,
     "player": "spotify",
@@ -87,7 +96,6 @@
     "player-icons": {
       "spotify": "<span color='#a6e3a1'></span>"
     },
-
     "status-icons": {
       "paused": "⏸",
       "playing": "",
@@ -101,7 +109,7 @@
     "reverse-direction": true
   },
   "pulseaudio": {
-    "format": "{icon}  {volume}% {format_source}",
+    "format": "{icon} {volume}% {format_source}",
     "format-muted": "󰖁 0% {format_source}",
     "format-icons": {
       "default": ["", ""]

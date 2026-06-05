@@ -14,7 +14,7 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Plugins do Oh My Zsh (Adicione mais aqui se quiser)
-plugins=(git)
+plugins=(git mise)
 
 # Inicializa o Oh My Zsh
 source $ZSH/oh-my-zsh.sh

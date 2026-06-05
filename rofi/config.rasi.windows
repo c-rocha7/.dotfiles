@@ -1,6 +1,6 @@
 configuration {
 	modi: "drun";
-	font: "SpaceMono Nerd Font 12";
+	font: "FiraCode Nerd Font Propo 12";
 	show-icons: true;
 	icon-theme: "Reversal-dark";
 	display-drun: "";

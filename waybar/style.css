@@ -1,6 +1,7 @@
 * {
-  font-family: "FantasqueSansM Nerd Font";
-  font-weight: bold;
+  all: unset;
+  font-family: "FiraCode Nerd Font Propo";
+  font-weight: 600;
   font-size: 14px;
 }
 
@@ -15,7 +16,8 @@ window#waybar {
 #mpris,
 #tray,
 #pulseaudio,
-#custom-swaync {
+#custom-swaync,
+#custom-cava {
   background: #1e1e2e;
   border-radius: 10px;
   color: #cdd6f4;
@@ -24,7 +26,7 @@ window#waybar {
 /* Modules Left */
 #custom-power {
   color: #f38ba8;
-  padding: 0 15px 0 10px;
+  padding: 0 10px;
 }
 
 #custom-power:hover {
@@ -36,6 +38,7 @@ window#waybar {
   color: #cdd6f4;
   min-width: 20px;
   margin-right: 5px;
+  padding: 0 8px;
 }
 
 #workspaces button:last-child {
@@ -53,6 +56,7 @@ window#waybar {
 
 #taskbar button {
   margin-right: 5px;
+  padding: 0 10px;
 }
 
 #taskbar button:last-child {
@@ -68,15 +72,21 @@ window#waybar {
   background: #45475a;
 }
 
+#custom-cava {
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 0 5px;
+}
+
 /* Modules Center */
 #clock {
-  padding: 0 10px;
+  padding: 0 5px 0 10px;
   color: #cba6f7;
 }
 
 /* Modules Right */
 #mpris {
-  padding: 0 10px;
+  padding: 0px 10px;
   color: #a6e3a1;
 }
 
@@ -90,7 +100,7 @@ window#waybar {
 }
 
 #custom-swaync {
-  padding: 0px 15px 0px 12px;
+  padding: 0px 10px;
   color: #74c7ec;
 }
 
