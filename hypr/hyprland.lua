@@ -15,7 +15,7 @@ hl.monitor({
     mode = "1920x1080@240",
     position = "-1920x0",
     scale = 1,
-    disabled = true;
+    -- disabled = true;
 })
 
 
@@ -191,8 +191,8 @@ hl.config({
 
 hl.config({
     scrolling = {
-        column_width = 1.0,
         fullscreen_on_one_column = true,
+        explicit_column_widths = "0.5, 1.0",
     },
 })
 
@@ -264,13 +264,12 @@ local mainMod           = "SUPER"
 local closeWindowBind   = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + T",          hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + M",          hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+-- hl.bind(mainMod .. " + M",          hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E",          hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + J",          hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + Space",      hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P",          hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + F",          hl.dsp.window.fullscreen({ mode = "maximized" }))
-hl.bind(mainMod .. " + SHIFT + F",  hl.dsp.window.fullscreen({ mode = "fullscreen" }))
+hl.bind(mainMod .. " + F",  hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
@@ -330,10 +329,13 @@ hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("wlogout --buttons-per-row 4"))
 -- Yazi
 hl.bind(mainMod .. " + Y", hl.dsp.exec_cmd("kitty yazi"))
 
+-- Resize columns
+hl.bind(mainMod .. " + N", hl.dsp.layout("colresize +conf"))
 
---------------------------------
----- WINDOWS AND WORKSPACES ----
---------------------------------
+
+-----------------
+---- WINDOWS ----
+-----------------
 
 local suppressMaximizeRule = hl.window_rule({
     name  = "suppress-maximize-events",
@@ -364,17 +366,6 @@ hl.window_rule({
     float = true,
 })
 
-hl.workspace_rule({ workspace = "1",    monitor = "DP-1" , default = true, persistent = true })
-hl.workspace_rule({ workspace = "2",    monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "3",    monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "4",    monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "5",    monitor = "DP-1", persistent = true })
-hl.workspace_rule({ workspace = "6",    monitor = "DP-2" , default = true, persistent = true })
-hl.workspace_rule({ workspace = "7",    monitor = "DP-2", persistent = true })
-hl.workspace_rule({ workspace = "8",    monitor = "DP-2", persistent = true })
-hl.workspace_rule({ workspace = "9",    monitor = "DP-2", persistent = true })
-hl.workspace_rule({ workspace = "10",   monitor = "DP-2", persistent = true })
-
 hl.window_rule({
     match = { class = "org.pulseaudio.pavucontrol" },
     float = true,
@@ -395,3 +386,19 @@ hl.window_rule({
     center = true,
     size = "1280 720"
 })
+
+
+--------------------
+---- WORKSPACES ----
+--------------------
+
+hl.workspace_rule({ workspace = "1",    monitor = "DP-1" , default = true, persistent = true })
+hl.workspace_rule({ workspace = "2",    monitor = "DP-1", persistent = true })
+hl.workspace_rule({ workspace = "3",    monitor = "DP-1", persistent = true })
+hl.workspace_rule({ workspace = "4",    monitor = "DP-1", persistent = true })
+hl.workspace_rule({ workspace = "5",    monitor = "DP-1", persistent = true })
+hl.workspace_rule({ workspace = "6",    monitor = "DP-2" , default = true, persistent = true })
+hl.workspace_rule({ workspace = "7",    monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "8",    monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "9",    monitor = "DP-2", persistent = true })
+hl.workspace_rule({ workspace = "10",   monitor = "DP-2", persistent = true })
