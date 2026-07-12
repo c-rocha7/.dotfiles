@@ -64,6 +64,10 @@ hl.on("hyprland.start", function ()
 
     -- Hypridle
     hl.exec_cmd("hypridle")
+
+    -- GNOME/GTK
+    hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
+    hl.exec_cmd("gsettings set org.gnome.desktop.interface gtk-theme 'Breeze-Dark'")
 end)
 
 
@@ -72,7 +76,9 @@ end)
 -------------------------------
 
 -- Cursor
+hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("XCURSOR_SIZE", "24")
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("HYPRCURSOR_SIZE", "24")
 
 -- XDG Specifications
@@ -98,7 +104,7 @@ hl.env("XDG_MENU_PREFIX", "arch-")
 hl.env("MOZ_ENABLE_WAYLAND", "1")
 
 -- Hyprshot
-hl.env("HYPRSHOT_DIR", os.getenv("HOME") .. "/Imagens/prints")
+hl.env("HYPRSHOT_DIR", os.getenv("HOME") .. "/Imagens/Prints")
 
 
 -----------------------
