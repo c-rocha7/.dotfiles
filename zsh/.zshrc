@@ -91,6 +91,9 @@ alias mi-l="mise ls"
 alias mi-clean="mise prune --dry-run"
 alias mi-purge="mise prune -y"
 
+# Nix Shortcuts
+alias hmsf="home-manager switch --flake ~/.nix-dotfiles#cauaarch"
+
 # ===============================================================
 # 7. SYNTAX HIGHLIGHTING & AUTOSUGGESTIONS (SEMPRE NO FINAL)
 # ===============================================================

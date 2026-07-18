@@ -1,11 +1,6 @@
 {
   "logo": {
-    "type": "file",
-    "source": "~/.dotfiles/fastfetch/arch.txt",
-    "padding": {
-      "top": 2,
-      "left": 2
-    }
+    "type": "file"
   },
   "display": {
     "separator": " "
@@ -38,6 +33,10 @@
       "type": "kernel"
     },
     {
+      "key": "│ {#36}󰖟 packages{#keys}│",
+      "type": "packages"
+    },
+    {
       "key": "│ {#36}󰇄 desktop {#keys}│",
       "type": "de"
     },
@@ -55,6 +54,10 @@
       "showPeCoreCount": true
     },
     {
+      "key": "│ {#34}󰍛 gpu     {#keys}│",
+      "type": "gpu"
+    },
+    {
       "key": "│ {#34}󰉉 disk    {#keys}│",
       "type": "disk",
       "folders": "/"
@@ -62,6 +65,22 @@
     {
       "key": "│ {#36} memory  {#keys}│",
       "type": "memory"
+    },
+    {
+      "key": "│ {#34}󰊯 theme   {#keys}│",
+      "type": "theme"
+    },
+    {
+      "key": "│ {#35}󰊯 icons   {#keys}│",
+      "type": "icons"
+    },
+    {
+      "key": "│ {#36}󰊯 cursor  {#keys}│",
+      "type": "cursor"
+    },
+    {
+      "key": "│ {#31}󰊯 font    {#keys}│",
+      "type": "font"
     },
     {
       "key": "├───────────┤",

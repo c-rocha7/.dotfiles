@@ -53,6 +53,9 @@ hl.on("hyprland.start", function ()
     -- Waybar
     hl.exec_cmd("waybar")
 
+    -- Noctalia
+    -- hl.exec_cmd("noctalia")
+
     -- Swaync
     hl.exec_cmd("swaync")
 
@@ -266,7 +269,7 @@ hl.device({
 ---- KEYBINDINGS ----
 ---------------------
 
-local mainMod = "SUPER"
+local mainMod = "ALT"
 
 hl.bind(mainMod .. " + T",      hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + Q",      hl.dsp.window.close())
