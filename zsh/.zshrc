@@ -93,6 +93,7 @@ alias mi-purge="mise prune -y"
 
 # Nix Shortcuts
 alias hmsf="home-manager switch --flake ~/.nix-dotfiles#cauaarch"
+alias nfu="nix flake update --flake ~/.nix-dotfiles"
 
 # ===============================================================
 # 7. SYNTAX HIGHLIGHTING & AUTOSUGGESTIONS (SEMPRE NO FINAL)

@@ -275,7 +275,7 @@ hl.bind(mainMod .. " + T",      hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + Q",      hl.dsp.window.close())
 hl.bind(mainMod .. " + M",      hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + J",      hl.dsp.window.float({ action = "toggle" }))
+-- hl.bind(mainMod .. " + J",      hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + Space",  hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + F",      hl.dsp.window.fullscreen({ mode = "fullscreen" }))
@@ -284,6 +284,11 @@ hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
+
+hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down"}))
 
 for i = 1, 10 do
     local key = i % 10
@@ -317,7 +322,7 @@ hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("clipvault list | rofi -dmenu -displa
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd([[bash -c "clipvault clear && notify-send 'Clipvault' 'Histórico limpo!'"]]))
 
 -- Hyprlock
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+-- hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Waybar
 hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd("/home/cauaarch/.dotfiles/waybar/scripts/launch.sh"))
