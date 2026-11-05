@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Copia as configurações do sistema (/etc) para ~/.dotfiles/system/, com o mesmo caminho.
+# São CÓPIAS (não links): o /etc não pode depender do /home.
+#
+# Rodar com:  sudo bash ~/.dotfiles/system/sync.sh
+# Rode de novo sempre que mudar algum destes arquivos, antes de commitar.
+
+set -euo pipefail
+[[ $EUID -eq 0 ]] || { echo "Rode com sudo."; exit 1; }
+
+DEST="$(dirname "$(readlink -f "$0")")"
+OWNER=7aauac
+
+FILES=(
+    # Boot: Limine + snapshots, initramfs
+    /etc/default/limine
+    /etc/mkinitcpio.conf
+    # Discos, swap em RAM
+    /etc/fstab
+    /etc/systemd/zram-generator.conf
+    # Pacman (multilib, Chaotic-AUR)
+    /etc/pacman.conf
+    /etc/pacman.d/chaotic-mirrorlist
+    # Snapper (snapshots do /)
+    /etc/snapper/configs/root
+    # Idioma, teclado do console, nome da máquina
+    /etc/locale.gen
+    /etc/locale.conf
+    /etc/vconsole.conf
+    /etc/hostname
+    /etc/hosts
+    # sudo (drop-ins; nunca editar /etc/sudoers direto)
+    /etc/sudoers.d/10-wheel
+    /etc/sudoers.d/20-pwfeedback
+    # Nix: serviço copiado para subir com o /nix em subvolume próprio
+    /etc/nix/nix.conf
+    /etc/systemd/system/nix-daemon.service
+    /etc/systemd/system/nix-daemon.socket
+    # Firewall (ufw)
+    /etc/ufw/user.rules
+    /etc/ufw/user6.rules
+)
+
+copied=0
+for f in "${FILES[@]}"; do
+    if [[ -f "$f" ]]; then
+        mkdir -p "$DEST$(dirname "$f")"
+        cp "$f" "$DEST$f"
+        copied=$((copied + 1))
+        echo "  ok  $f"
+    else
+        echo "  --  $f (não existe, pulado)"
+    fi
+done
+
+# Arquivos do sudoers.d e do snapper vêm com permissão só do root: deixa legível para o git.
+chown -R "$OWNER:$OWNER" "$DEST/etc"
+find "$DEST/etc" -type f -exec chmod 644 {} +
+
+echo
+echo "$copied arquivos copiados para $DEST/etc"

@@ -1,0 +1,23 @@
+# Configuração do limine-entry-tool (limine-mkinitcpio-hook) e do limine-snapper-sync.
+# Depois de mudar: sudo limine-update
+
+### Boot
+ESP_PATH="/boot"
+KERNEL_CMDLINE[default]+=root=UUID=61b69d0d-6939-4d01-9bfd-a87c1bf4d558 rw rootflags=subvol=@
+ENABLE_VERIFICATION=yes
+BOOT_ORDER="*, *fallback, Snapshots"
+
+### Snapshots no menu (limine-snapper-sync)
+SNAPPER_CONFIG_NAME="root"
+ROOT_SUBVOLUME_PATH="/@"
+ROOT_SNAPSHOTS_PATH="/@snapshots"
+# A partição de boot tem 1 GB: limita o uso e só lista os snapshots "antes" do pacman.
+LIMIT_USAGE_PERCENT=80
+MAX_SNAPSHOT_ENTRIES=auto
+EXCLUDE_SNAPSHOT_TYPES="post"
+RESTORE_METHOD=replace
+SNAPSHOT_FORMAT_CHOICE=2
+ENABLE_NOTIFICATION=yes
+
+# Não lista outros carregadores EFI no menu (o "EFI fallback" era o próprio Limine)
+FIND_BOOTLOADERS=no
