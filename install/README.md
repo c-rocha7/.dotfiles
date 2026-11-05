@@ -11,6 +11,8 @@ conferem o estado antes de mexer e fazem backup do que alteram. Rodar com `sudo 
 | 4 | `fase3-limpeza.sh` | Remove a entrada "backup manual", o kernel antigo, a entrada antiga da BIOS e o hook antigo. |
 | 5 | `fase4-secure-boot.sh` | Secure Boot com chaves próprias (sbctl) + hash do `limine.conf` no Limine; tira o "EFI fallback" do menu. Em partes: `preparar` → reiniciar → BIOS em Setup Mode → `chaves` → BIOS liga o Secure Boot → `status`. |
 | – | `ajustes-sistema.sh` | `/boot` só para o root (fstab `fmask/dmask=0077`) e earlyoom. |
+| – | `ssd-saude.sh` | smartmontools + smartd vigiando o SSD, com aviso na ilha e notificação de teste. |
+| – | `plocate.sh` | Busca de arquivos (`locate`), sem indexar snapshots, `/nix` e Docker. |
 | – | `manutencao.sh` | Scrub mensal do Btrfs e limpeza semanal do cache do pacman. |
 | – | `ssh-somente-chave.sh` | **Pendente:** SSH só com chave (copiar a chave do desktop antes). |
 | – | `gen_emojis.py` | Regera a lista de emojis do launcher (instruções no arquivo). |

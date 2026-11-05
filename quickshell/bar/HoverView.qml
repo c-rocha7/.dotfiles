@@ -1,6 +1,6 @@
 // Ilha aberta (mouse em cima):
 //   esquerda: workspaces, mídia (se houver), bateria / perfil de energia / wi-fi / bluetooth
-//             e controles (bandeja, volume, sino, power)
+//             e controles (bandeja, volume, sino, power); atualizações pendentes
 //   direita:  hora, data por extenso e calendário do mês
 
 import QtQuick
@@ -58,6 +58,9 @@ IslandView {
                 BluetoothPill {}
                 RecordPill { stoppable: true }
             }
+
+            // Atualizações pendentes (só aparece quando há alguma)
+            UpdatesPill {}
 
             Row {
                 spacing: Theme.gap

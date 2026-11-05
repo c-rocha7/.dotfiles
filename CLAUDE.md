@@ -74,6 +74,9 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   nunca Hyprland, ilha, áudio). O `systemd-oomd` **não** serve: os apps do Hyprland ficam no cgroup da sessão.
 - `/boot` só para o root (fstab `fmask=0077,dmask=0077`): para ler o `limine.conf` use `sudo`.
 - Manutenção: `btrfs-scrub@-.timer` (mensal), `paccache.timer` (semanal). fstrim não precisa (discard=async).
+- **SSD** (Neo Forza NSP095P3451, 512 GB): `smartd` vigia o `/dev/nvme0` e avisa na ilha
+  (`/etc/smartmontools/smartd-notificar.sh`). Em 05/11: 0% de desgaste, 2,01 TB gravados, 15 desligamentos bruscos.
+- Busca de arquivos: `plocate` (`locate nome`; não indexa `/.snapshots`, `/nix`, Docker). Exemplos de comandos: `tldr` (Nix).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
 - Login: `ly@tty2`. **Chaveiro: gnome-keyring**, desbloqueado no login pelo PAM do ly (o aviso
   `gkr-pam: unable to locate daemon control file` é normal). VS Code: `password-store` no `~/.vscode/argv.json`;
@@ -105,7 +108,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - **Quickshell = "ilha dinâmica"** (`quickshell/`, ver `quickshell/README.md`): barra, notificações
   (substitui o swaync), launcher (`SUPER+Space`: apps, `:emoji`, `=conta`, `>comando`; `SUPER+V` clipboard;
   `SUPER+Tab` janelas), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
-  gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (PAM `hyprlock`).
+  gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (PAM `hyprlock`),
+  atualizações pendentes na ilha aberta (`Updates.qml`; clique roda o `atualizar`).
   - Singletons: `pragma Singleton` tem que ser a **primeira linha**; `shell.qml` precisa de
     `//@ pragma UseQApplication` (menus da bandeja).
   - Reiniciar a barra: `SUPER+SHIFT+Esc`. Logs: `qs log $(ls -t /run/user/$UID/quickshell/by-id/*/log.qslog | head -1)`.
@@ -121,7 +125,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - `hmsf` = switch (+ kbuildsycoca6), `nfu` = update do flake, `hmn` = news. `atualizar` = tudo (pacman/AUR,
     flatpak, Nix, mise).
   - **Arquivo novo no flake precisa de `git add`** (o Nix ignora arquivos que o git não acompanha).
-  - Módulos ativos: zen, obsidian, vesktop, qview, devenv, direnv, nil, nixd, nixpkgs-fmt, flatpak
+  - Módulos ativos: zen, obsidian, vesktop, qview, tealdeer, devenv, direnv, nil, nixd, nixpkgs-fmt, flatpak
     (inclui Navicat via `flatpakref` + `sha256`), wrappers btop, fastfetch, mpv, vim, yazi.
   - GPU para apps do Nix: `non-nixos-gpu-setup` já rodado (`/run/opengl-driver`).
 - **mise**: em `~/.local/bin/mise`, **sem linguagens globais** (só lazygit, lazydocker, usage).
@@ -131,7 +135,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 
 - `pkill -f <padrão>` dentro de um comando que contém o mesmo padrão **mata o próprio shell**:
   filtre processos por `pgrep -x` / `/proc/<pid>/cmdline`.
-- O shell é **zsh**: variáveis sem aspas não são divididas em palavras (cuidado ao passar listas).
+- O shell é **zsh**: variáveis sem aspas não são divididas em palavras (cuidado ao passar listas), e
+  `path` é especial (ligada ao `PATH`): `for path in ...` apaga o PATH. Teste trechos de bash com `bash -c`.
 - `busctl status <nome>` pode ativar serviços D-Bus (use `busctl --user list`).
 - Instalar um pacote do repo que não existe cancela a transação inteira (mova para o yay).
 - Wi-Fi de casa com latência alta; downloads grandes demoram.

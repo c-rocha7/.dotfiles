@@ -11,6 +11,7 @@
     nixpkgs-fmt = ./features/programs/_nixpkgs-fmt.nix;
     obsidian = ./features/programs/_obsidian.nix;
     qview = ./features/programs/_qview.nix;
+    tealdeer = ./features/programs/_tealdeer.nix;
     vesktop = ./features/programs/_vesktop.nix;
     zen = ./features/programs/_zen.nix;
 

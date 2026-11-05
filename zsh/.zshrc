@@ -79,6 +79,7 @@ atualizar() {
   echo "\n==> 4/4 mise"
   mise self-update -y && mise upgrade
   echo "\n✅ Tudo atualizado."
+  qs ipc call updates refresh >/dev/null 2>&1   # zera o contador da ilha
 }
 
 # ===============================================================

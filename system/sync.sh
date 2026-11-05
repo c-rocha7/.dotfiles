@@ -40,6 +40,11 @@ FILES=(
     /etc/systemd/system/nix-daemon.socket
     # earlyoom (evita travar sem memória; install/ajustes-sistema.sh)
     /etc/default/earlyoom
+    # Saúde do SSD (smartd + aviso na ilha; install/ssd-saude.sh)
+    /etc/smartd.conf
+    /etc/smartmontools/smartd-notificar.sh
+    # plocate: pastas fora da indexação (install/plocate.sh)
+    /etc/updatedb.conf
     # Firewall (ufw)
     /etc/ufw/user.rules
     /etc/ufw/user6.rules
@@ -60,7 +65,7 @@ done
 # Arquivos do sudoers.d e do snapper vêm com permissão só do root: deixa legível para o git.
 chown -R "$OWNER:$OWNER" "$DEST/etc"
 find "$DEST/etc" -type f -exec chmod 644 {} +
-chmod 755 "$DEST/etc/boot/hooks/post.d/"* 2>/dev/null || true
+chmod 755 "$DEST/etc/boot/hooks/post.d/"* "$DEST/etc/smartmontools/"*.sh 2>/dev/null || true
 
 echo
 echo "$copied arquivos copiados para $DEST/etc"

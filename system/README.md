@@ -24,6 +24,8 @@ sudo bash ~/.dotfiles/system/sync.sh
 | `etc/sudoers.d/*` | sudo para o grupo wheel e asteriscos ao digitar a senha |
 | `etc/nix/nix.conf`, `etc/systemd/system/nix-daemon.*` | Nix com o `/nix` em subvolume próprio (ver `install/fase1-subvolumes.sh`) |
 | `etc/default/earlyoom` | earlyoom: encerra o maior consumidor de memória antes de travar (nunca o desktop/áudio) |
+| `etc/smartd.conf`, `etc/smartmontools/smartd-notificar.sh` | smartd vigia o NVMe e avisa na ilha (notificação crítica) |
+| `etc/updatedb.conf` | plocate: não indexa `/.snapshots`, `/nix` nem o Docker |
 | `etc/ufw/user*.rules` | Firewall: só SSH da rede local |
 
 ## Numa reinstalação
