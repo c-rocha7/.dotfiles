@@ -46,6 +46,7 @@ Logs: `qs log $(ls -t /run/user/$UID/quickshell/by-id/*/log.qslog | head -1)`.
 | `Keyboard.qml` | Estado do Caps Lock, lido da luz do teclado (`/sys/class/leds/*::capslock`) |
 | `QuickSettings.qml` | Estado do painel de conexões (aba Wi-Fi/Bluetooth) e comandos `qs ipc call network ...` |
 | `Battery.qml` | Bateria (UPower) e notificação de bateria fraca em 15% e 5% |
+| `GameMode.qml` | Jogos: perfil Desempenho enquanto o GameMode está ativo, aviso e ícone na ilha (`qs ipc call gamemode started\|stopped`, chamado por `gamemode/hook.sh`) |
 | `Brightness.qml` | Brilho da tela na escala do `hypr/scripts/brightness.sh` (0% = mínimo útil da tela), avisado via `qs ipc call brightness changed` |
 | `NotificationService.qml` | Servidor de notificações (substitui o swaync): histórico, "não perturbe", ícones e comandos `qs ipc` |
 | `lock/LockScreen.qml`, `lock/LockSurface.qml` | Bloqueio seguro do Wayland (ext-session-lock) e o visual da tela de bloqueio |
@@ -77,7 +78,7 @@ Logs: `qs log $(ls -t /run/user/$UID/quickshell/by-id/*/log.qslog | head -1)`.
 | `bar/Pill.qml`, `bar/BarText.qml` | Bloco arredondado e texto padrão |
 | `bar/Workspaces.qml`, `Tray.qml`, `Volume.qml`, `Notifications.qml`, `PowerButton.qml` | Controles mostrados no hover |
 
-Arquivos de `bar/` são importados com `import qs.bar`; os da raiz (`Theme`, `NotificationService`, `Launcher`, `PowerMenu`, `QuickSettings`, `Keyboard`, `Cheatsheet`, `Recorder`, `Lock`, `Wallpaper`, `Battery`, `Brightness`) com `import qs`.
+Arquivos de `bar/` são importados com `import qs.bar`; os da raiz (`Theme`, `NotificationService`, `Launcher`, `PowerMenu`, `QuickSettings`, `Keyboard`, `Cheatsheet`, `Recorder`, `Lock`, `Wallpaper`, `Battery`, `Brightness`, `GameMode`) com `import qs`.
 
 ## Launcher
 
@@ -186,7 +187,7 @@ O histórico fica na memória: some ao reiniciar o `qs` ou sair da sessão.
 - O `shell.qml` começa com `//@ pragma UseQApplication`: sem isso os menus da bandeja
   (Wi-Fi, Spotify, Vesktop...) não abrem (o erro só aparece no log).
 
-- Em singletons (`Theme.qml`, `NotificationService.qml`, `Launcher.qml`, `PowerMenu.qml`, `QuickSettings.qml`, `Keyboard.qml`, `Cheatsheet.qml`, `Recorder.qml`, `Lock.qml`, `Wallpaper.qml`, `Battery.qml`, `Brightness.qml`), o `pragma Singleton` tem que ser
+- Em singletons (`Theme.qml`, `NotificationService.qml`, `Launcher.qml`, `PowerMenu.qml`, `QuickSettings.qml`, `Keyboard.qml`, `Cheatsheet.qml`, `Recorder.qml`, `Lock.qml`, `Wallpaper.qml`, `Battery.qml`, `Brightness.qml`, `GameMode.qml`), o `pragma Singleton` tem que ser
   a **primeira linha** do arquivo, senão o Quickshell não o reconhece (e não mostra erro).
 
 - A janela da ilha tem 1140x700 (o maior painel é o guia de atalhos); só a ilha recebe cliques.

@@ -3,7 +3,7 @@ pragma Singleton
 // Bateria do notebook (via UPower).
 // - percent, pluggedIn, low, icon: usados pela ilha
 // - avisa com uma notificação ao chegar em 15% e 5% (fora da tomada)
-// - troca o perfil de energia sozinho ao tirar/colocar o carregador (autoProfile)
+// - troca o perfil de energia sozinho ao tirar/colocar o carregador (autoProfile; com jogo aberto, ver GameMode.qml)
 // Obs.: a BIOS limita a carga em 80%, então "carregado" costuma parar em 80%.
 
 import QtQuick
@@ -52,7 +52,13 @@ Singleton {
     onPluggedInChanged: {
         if (pluggedIn)
             warned = [];
-        if (autoProfile && available)
-            PowerProfiles.profile = pluggedIn ? PowerProfile.Balanced : PowerProfile.PowerSaver;
+        if (!autoProfile || !available)
+            return;
+        const profile = pluggedIn ? PowerProfile.Balanced : PowerProfile.PowerSaver;
+        // Jogo aberto: fica em Desempenho; o novo perfil vale quando o jogo fechar.
+        if (GameMode.active)
+            GameMode.restoreTo = profile;
+        else
+            PowerProfiles.profile = profile;
     }
 }

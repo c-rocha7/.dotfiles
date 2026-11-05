@@ -186,6 +186,15 @@ Rectangle {
         }
     }
 
+    // GameMode: aviso ao abrir/fechar um jogo (GameMode.qml).
+    Connections {
+        target: GameMode
+        function onToggled() {
+            island.showToast("\u{f0297}", GameMode.active ? "GameMode ativo · Desempenho" : "GameMode desligado",
+                             GameMode.active ? Theme.green : Theme.overlay);
+        }
+    }
+
     // Brilho: os atalhos do Hyprland avisam via "qs ipc call brightness changed".
     Connections {
         target: Brightness

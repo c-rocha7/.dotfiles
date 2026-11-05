@@ -1,7 +1,7 @@
 // Ilha fechada: workspace atual · hora.
 // Sino cortado: "não perturbe" ligado. Pontinho azul: há notificações no painel.
 // Bateria em vermelho: abaixo de 20% fora da tomada. Ícone azul de teclado: Caps Lock ligado.
-// Ponto vermelho + tempo: gravando a tela.
+// Ponto vermelho + tempo: gravando a tela. Controle verde: GameMode ativo (jogo aberto).
 
 import QtQuick
 import Quickshell
@@ -39,6 +39,13 @@ IslandView {
             color: "transparent"
             padding: 0
             anchors.verticalCenter: parent.verticalCenter
+        }
+
+        // GameMode ativo (jogo aberto)
+        BarText {
+            visible: GameMode.active
+            text: "\u{f0297}"
+            color: Theme.green
         }
 
         // Caps Lock ligado

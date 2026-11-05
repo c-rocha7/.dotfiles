@@ -73,6 +73,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - Gravação de tela: `gpu-screen-recorder` (VA-API). Prints: `hyprshot` + `satty`.
 - Padrões: vídeo → **mpv** (Nix), imagem → **qView** (Nix), links → Zen (Nix), pastas → Dolphin.
   Depois de instalar apps pelo Nix: `kbuildsycoca6` (o `hmsf` já faz) para o Dolphin enxergá-los.
+- **Jogos** (ver `gamemode/README.md`; comandos do Steam em `docs/jogos-steam.md`): Steam nativo (multilib), GameMode (usuário no grupo `gamemode`),
+  MangoHud, Gamescope (FSR), Proton-GE pelo flatpak ProtonPlus. `vm.max_map_count` já é 1048576 (padrão do Arch).
+  O GameMode **não** troca o governor (fica `powersave`/EPP): o `gamemode/hook.sh` avisa a ilha, que liga o
+  perfil Desempenho do power-profiles-daemon e volta ao anterior no fim.
 
 ## 7. Desktop: Hyprland 0.57 (config em Lua) + Quickshell
 
@@ -124,12 +128,12 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - Plano: no desktop, **unificar numa `main` só** com `hosts/<máquina>/` para o que muda entre as máquinas
   (monitores/workspaces do Hyprland, `system/etc`, caminhos do VS Code), carregado pelo hostname.
 - Pastas: `hypr`, `quickshell`, `ghostty`, `zsh`, `mise`, `nix`, `nix-dotfiles`, `gtk`, `qt`, `rofi`
-  (reserva do launcher), `wlogout` (reserva do menu de energia), `waypaper`, `kitty`, `git`, `vscode`,
-  `install/` (scripts das fases, com README), `system/` (cópias do `/etc`; atualizar com `sudo bash system/sync.sh`).
+  (reserva do launcher), `wlogout` (reserva do menu de energia), `waypaper`, `kitty`, `git`, `vscode`, `gamemode`, `MangoHud`,
+  `install/` (scripts das fases, com README), `docs/` (guias e comandos prontos para reutilizar), `system/` (cópias do `/etc`; atualizar com `sudo bash system/sync.sh`).
 
 ## 11. Pendências
 
-1. Jogos: Steam, MangoHud, Proton, `vm.max_map_count`.
+1. Jogos: testar um jogo de verdade (GameMode, MangoHud, Gamescope, Proton-GE).
 2. Edição de vídeo/foto: escolher apps e testar VA-API.
 3. Backup do `/home` (precisa de destino: HD externo ou nuvem).
 4. SSH só com chave (copiar a chave do desktop; `install/ssh-somente-chave.sh`).
