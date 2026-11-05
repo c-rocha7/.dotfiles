@@ -6,3 +6,4 @@ aqui fica o "como usar".
 | Arquivo | Assunto |
 |---|---|
 | [`jogos-steam.md`](jogos-steam.md) | Opções de inicialização do Steam (GameMode, MangoHud, Gamescope/FSR) e Proton-GE |
+| [`edicao-video-foto.md`](edicao-video-foto.md) | Kdenlive, GIMP, darktable, Inkscape; VA-API e OpenCL na GPU |

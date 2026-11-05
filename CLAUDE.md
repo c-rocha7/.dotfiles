@@ -69,7 +69,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 
 ## 6. Gráficos, áudio, apps
 
-- Mesa + RADV (Vulkan) + VA-API (H.264 na GPU). PipeWire + WirePlumber.
+- Mesa + RADV (Vulkan) + VA-API (codifica H.264/HEVC na GPU) + OpenCL (rusticl). PipeWire + WirePlumber.
+- **Edição** (ver `docs/edicao-video-foto.md`): Kdenlive (render/proxy VAAPI), GIMP 3, darktable (OpenCL), Inkscape.
 - Gravação de tela: `gpu-screen-recorder` (VA-API). Prints: `hyprshot` + `satty`.
 - Padrões: vídeo → **mpv** (Nix), imagem → **qView** (Nix), links → Zen (Nix), pastas → Dolphin.
   Depois de instalar apps pelo Nix: `kbuildsycoca6` (o `hmsf` já faz) para o Dolphin enxergá-los.
@@ -134,9 +135,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 ## 11. Pendências
 
 1. Jogos: testar um jogo de verdade (GameMode, MangoHud, Gamescope, Proton-GE).
-2. Edição de vídeo/foto: escolher apps e testar VA-API.
-3. Backup do `/home` (precisa de destino: HD externo ou nuvem).
-4. SSH só com chave (copiar a chave do desktop; `install/ssh-somente-chave.sh`).
-5. Secure Boot com Limine (opcional).
-6. (Opcional) tirar o item "EFI fallback" do `limine.conf`.
-7. Unificar dotfiles na `main` com `hosts/` (no desktop).
+2. Backup do `/home` (precisa de destino: HD externo ou nuvem).
+3. SSH só com chave (copiar a chave do desktop; `install/ssh-somente-chave.sh`).
+4. Secure Boot com Limine (opcional).
+5. (Opcional) tirar o item "EFI fallback" do `limine.conf`.
+6. Unificar dotfiles na `main` com `hosts/` (no desktop).
