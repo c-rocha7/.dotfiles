@@ -1,0 +1,15 @@
+// Coloque as suas associações de teclas neste arquivo para substituir os padrões
+[
+    {
+        "key": "ctrl+shift+alt+n",
+        "command": "explorer.newFile"
+    },
+    {
+        "key": "ctrl+shift+alt+d",
+        "command": "explorer.newFolder"
+    },
+    {
+        "key": "ctrl+shift+alt+r",
+        "command": "workbench.files.action.collapseExplorerFolders"
+    }
+]

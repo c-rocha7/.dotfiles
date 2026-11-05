@@ -1,0 +1,282 @@
+{
+  /* Workbench Style */
+  "workbench.colorTheme": "Omni",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "none",
+  "workbench.sideBar.location": "right",
+  "workbench.layoutControl.enabled": false,
+  "workbench.editor.enablePreview": false,
+  "workbench.activityBar.location": "top",
+  "workbench.editor.labelFormat": "short",
+
+  /* Window Style */
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "compact",
+
+  /* Editor Style */
+  "editor.accessibilitySupport": "off",
+  "editor.wordWrap": "on",
+  "editor.cursorStyle": "block",
+  "editor.renderLineHighlight": "all",
+  "editor.scrollbar.vertical": "auto",
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.rulers": [80, 120],
+  "editor.guides.bracketPairs": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.minimap.enabled": false,
+  "editor.stickyScroll.enabled": false,
+  "editor.semanticHighlighting.enabled": false,
+  /*
+   *  FONTES
+   *  ComicShannsMono Nerd Font
+   *  ComicShannsMono Nerd Font Mono
+   *  ComicShannsMono Nerd Font Propo
+   *  FantasqueSansM Nerd Font
+   *  FantasqueSansM Nerd Font Mono
+   *  FantasqueSansM Nerd Font Propo
+   *  FiraCode Nerd Font
+   *  FiraCode Nerd Font Mono
+   *  FiraCode Nerd Font Propo
+   *  FiraMono Nerd Font
+   *  FiraMono Nerd Font Mono
+   *  FiraMono Nerd Font Propo
+   *  JetBrainsMono Nerd Font
+   *  JetBrainsMono Nerd Font Mono
+   *  JetBrainsMono Nerd Font Propo
+   *  JetBrainsMonoNL Nerd Font
+   *  JetBrainsMonoNL Nerd Font Mono
+   *  JetBrainsMonoNL Nerd Font Propo
+   *  LiberationMono Nerd Font
+   *  LiberationMono Nerd Font Mono
+   *  LiberationMono Nerd Font Propo
+   *  LiberationSans Nerd Font
+   *  LiberationSans Nerd Font Propo
+   *  LiberationSerif Nerd Font
+   *  LiberationSerif Nerd Font Propo
+   *  SpaceMono Nerd Font
+   *  SpaceMono Nerd Font Mono
+   *  SpaceMono Nerd Font Propo
+   *  === == => >= <= -> <- ~~ ~- != !==
+   */
+  "editor.fontFamily": "FantasqueSansM Nerd Font",
+  "editor.fontWeight": "400",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.4,
+  "editor.fontLigatures": true,
+  "editor.linkedEditing": true,
+  "editor.tabSize": 4,
+
+  /* Explorer Style */
+  "explorer.compactFolders": false,
+
+  /* Extensions */
+  "extensions.ignoreRecommendations": true,
+
+  /* Terminal Default */
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.fontFamily": "FantasqueSansM Nerd Font",
+
+  /* Code Formatter */
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[php]": {
+    /* PHP Intelephense */
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+
+    /* Laravel Pint */
+    // "editor.defaultFormatter": "open-southeners.laravel-pint",
+
+    /* Laravel */
+    // "editor.defaultFormatter": "laravel.vscode-laravel",
+
+    /* php cs fixer */
+    // "editor.defaultFormatter": "junstyle.php-cs-fixer",
+
+    "editor.formatOnSave": true,
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-containers",
+    "editor.formatOnSave": false,
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnSave": false,
+  },
+  "[blade]": {
+    "editor.defaultFormatter": "shufo.vscode-blade-formatter",
+    "editor.formatOnSave": false,
+  },
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide",
+    "editor.formatOnSave": false,
+  },
+  "[svg]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "prettier.tabWidth": 4,
+  },
+
+  /* Files Style */
+  "files.insertFinalNewline": true,
+
+  /* Inline Parameters */
+  "inline-parameters.enabled": true,
+  "inline-parameters.hideRedundantAnnotations": false,
+
+  /* Path Intellisense */
+  "path-intellisense.extensionOnImport": true,
+
+  /* Code Runner */
+  "code-runner.runInTerminal": true,
+
+  /* Tailwind CSS IntelliSense */
+  "editor.quickSuggestions": {
+    "strings": "on",
+  },
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "html",
+  },
+
+  /* Code Runner */
+  "code-runner.ignoreSelection": true,
+
+  /* DevDb */
+  "Devdb.colorTheme": "dark",
+
+  /* Code Spell Checker */
+  "cSpell.enabled": false,
+  "cSpell.language": "en,pt,pt_BR",
+
+  /* Laravel Pint */
+  "laravel-pint.enable": false,
+
+  /* PHP Intelephense */
+  "intelephense.codeLens.implementations.enable": true,
+  "intelephense.codeLens.overrides.enable": true,
+  "intelephense.codeLens.parent.enable": true,
+  "intelephense.codeLens.references.enable": true,
+  "intelephense.codeLens.usages.enable": true,
+  "intelephense.compatibility.preferPsalmPhpstanPrefixedAnnotations": true,
+  "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": true,
+
+  /* Nix IDE */
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "formatting": {
+        "command": ["nixpkgs-fmt"],
+      },
+      "options": {
+        // notebook: opções do home-manager do flake em ~/.dotfiles/nix-dotfiles
+        "home-manager": {
+          "expr": "(builtins.getFlake \"/home/7aauac/.dotfiles/nix-dotfiles\").homeConfigurations.\"7aauac\".options",
+        },
+      },
+    },
+  },
+
+  /* Nix Environment Selector */
+  "nixEnvSelector.suggestion": false,
+
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
+    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.ui": "default",
+    "*.qrc": "qt-core.qrcEditor",
+  },
+  "qt-core.additionalQtPaths": [
+    {
+      "name": "Qt-5.15.19-linux-g++-x86_64_from_PATH",
+      "path": "/usr/sbin/qmake"
+    },
+    {
+      "name": "Qt-5.15.19-linux-g++-x86_64_from_PATH",
+      "path": "/usr/sbin/qtpaths"
+    }
+  ],
+  "remote.defaultExtensionsIfInstalledLocally": [
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "GitHub.vscode-pull-request-github",
+  ],
+  "chat.viewSessions.orientation": "stacked",
+  "mise.binPath": "/home/7aauac/.local/bin/mise",
+
+  /* ESLint */
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+  },
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.tsx": "${capture}.ts",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
+    "flake.nix": "flake.lock",
+    "Cargo.toml": "Cargo.lock",
+    "*.sqlite": "${capture}.${extname}-*",
+    "*.db": "${capture}.${extname}-*",
+    "*.sqlite3": "${capture}.${extname}-*",
+    "*.db3": "${capture}.${extname}-*",
+    "*.sdb": "${capture}.${extname}-*",
+    "*.s3db": "${capture}.${extname}-*"
+  },
+  "remote.autoForwardPortsSource": "hybrid",
+
+  /* Claude Code for VS Code */
+  "claudeCode.preferredLocation": "panel",
+  "claudeCode.hideOnboarding": true,
+  "mise.autoDetectMiseBinPath": false,
+  "qt-core.showWelcomePageOnActivation": false,
+
+  /* Qt QML: servidor de linguagem do Qt 6 do sistema (pacote qt6-declarative) */
+  "qt-qml.qmlls.customExePath": "/usr/lib/qt6/bin/qmlls",
+  "qt-qml.doNotAskForQmllsDownload": true,
+}
