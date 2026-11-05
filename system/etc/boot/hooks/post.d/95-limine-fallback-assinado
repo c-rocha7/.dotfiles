@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Gancho do limine-entry-tool / limine-snapper-sync (roda depois do 90-limine-enroll-config).
+# Copia o Limine já com o hash do limine.conf gravado e assinado (EFI/limine/limine_x64.efi)
+# para o caminho de reserva (EFI/BOOT/BOOTX64.EFI, entrada "UEFI OS" da BIOS).
+# Assim, se a BIOS reordenar o boot sozinha, a reserva também passa no Secure Boot.
+# Instalado em /etc/boot/hooks/post.d/ por install/fase4-secure-boot.sh.
+
+src=/boot/EFI/limine/limine_x64.efi
+dst=/boot/EFI/BOOT/BOOTX64.EFI
+
+[[ -f $src && -d ${dst%/*} ]] || exit 0
+cmp -s "$src" "$dst" && exit 0
+
+# Só copia se o principal estiver assinado (senão mantém a reserva anterior).
+if command -v sbctl >/dev/null && sbctl verify 2>/dev/null | grep -q "limine_x64.efi is signed"; then
+    cp -f "$src" "$dst" && sync -f "$dst"
+fi
+exit 0

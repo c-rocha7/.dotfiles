@@ -21,3 +21,9 @@ ENABLE_NOTIFICATION=yes
 
 # Não lista outros carregadores EFI no menu (o "EFI fallback" era o próprio Limine)
 FIND_BOOTLOADERS=no
+
+# Secure Boot: grava o hash do limine.conf no Limine (fase4-secure-boot.sh)
+ENABLE_ENROLL_LIMINE_CONFIG=yes
+
+# Reserva EFI/BOOT/BOOTX64.EFI mantida assinada pelo gancho 95-limine-fallback-assinado
+ENABLE_LIMINE_FALLBACK=no

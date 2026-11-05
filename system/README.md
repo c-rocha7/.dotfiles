@@ -14,6 +14,7 @@ sudo bash ~/.dotfiles/system/sync.sh
 | Arquivo | Para quê |
 |---|---|
 | `etc/default/limine` | Limine + snapshots no menu (limine-mkinitcpio-hook / limine-snapper-sync) |
+| `etc/boot/hooks/post.d/95-limine-fallback-assinado` | Secure Boot: copia o Limine assinado para a reserva `EFI/BOOT/BOOTX64.EFI` |
 | `etc/mkinitcpio.conf` | Hooks do initramfs (systemd, `sd-btrfs-overlayfs` para iniciar por snapshots) |
 | `etc/fstab` | Subvolumes Btrfs (`@`, `@home`, `@log`, `@pkg`, `@nix`, `@docker`, `@snapshots`) |
 | `etc/systemd/zram-generator.conf` | Swap em RAM (zram) |

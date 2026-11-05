@@ -15,6 +15,8 @@ FILES=(
     # Boot: Limine + snapshots, initramfs
     /etc/default/limine
     /etc/mkinitcpio.conf
+    # Secure Boot: mantém a reserva EFI/BOOT/BOOTX64.EFI assinada (install/fase4-secure-boot.sh)
+    /etc/boot/hooks/post.d/95-limine-fallback-assinado
     # Discos, swap em RAM
     /etc/fstab
     /etc/systemd/zram-generator.conf
@@ -56,6 +58,7 @@ done
 # Arquivos do sudoers.d e do snapper vêm com permissão só do root: deixa legível para o git.
 chown -R "$OWNER:$OWNER" "$DEST/etc"
 find "$DEST/etc" -type f -exec chmod 644 {} +
+chmod 755 "$DEST/etc/boot/hooks/post.d/"* 2>/dev/null || true
 
 echo
 echo "$copied arquivos copiados para $DEST/etc"

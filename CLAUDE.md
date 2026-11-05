@@ -28,7 +28,7 @@
 ## 2. BIOS (AMI Aptio V1.05.X)
 
 UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM off (UEFI), Fast Boot off,
-**Secure Boot off** (sem chaves criadas). Entradas UEFI: `Limine` (`\EFI\limine\limine_x64.efi`) e
+**Secure Boot on** (chaves próprias do sbctl + Microsoft; `install/fase4-secure-boot.sh`). Entradas UEFI: `Limine` (`\EFI\limine\limine_x64.efi`) e
 `UEFI OS` (`\EFI\BOOT\BOOTX64.EFI`, também o Limine). O firmware às vezes reordena o boot sozinho.
 
 ## 3. Disco (Btrfs) e snapshots
@@ -53,7 +53,14 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - Snapshots "pre" aparecem no menu (submenu **Snapshots**); iniciar por um deles usa overlay
     (só leitura) e mostra o aviso **"Restaurar agora"** (`limine-snapper-restore`).
   - Limite de 80% da ESP (1 GiB); sem `inotify-tools` o plugin do snapper faz a sincronização.
-- Secure Boot: opcional, pendente (com Limine o fluxo é `limine-enroll-config`, não assinar o vmlinuz).
+- **Secure Boot ativo** (`install/fase4-secure-boot.sh`): só o Limine é assinado (sbctl, chaves em `/var/lib/sbctl`,
+  cópia em `/home/.sbctl-backup`); o hash do `limine.conf` vai gravado no Limine (`ENABLE_ENROLL_LIMINE_CONFIG=yes`)
+  e o conf tem o hash do kernel/initramfs (`ENABLE_VERIFICATION=yes`). Kernel não é assinado. Editor do menu desligado.
+  - Ganchos em `/etc/boot/hooks/`: `10-limine-reset-enroll` → `90-limine-enroll-config` (grava hash + assina) →
+    `95-limine-fallback-assinado` (copia para `EFI/BOOT/BOOTX64.EFI`). Rodam a cada `limine-update` e snapshot.
+  - **Nunca edite o `limine.conf` à mão**: o hash não bate e o boot trava ("CHECKSUM MISMATCH"). Recuperar:
+    BIOS → Secure Boot off; ver o cabeçalho do script. Conferir: `sudo bash install/fase4-secure-boot.sh status`.
+  - "EFI fallback" fora do menu (`FIND_BOOTLOADERS=no` + entrada removida).
 
 ## 5. Sistema
 
@@ -137,6 +144,4 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 1. Jogos: testar um jogo de verdade (GameMode, MangoHud, Gamescope, Proton-GE).
 2. Backup do `/home` (precisa de destino: HD externo ou nuvem).
 3. SSH só com chave (copiar a chave do desktop; `install/ssh-somente-chave.sh`).
-4. Secure Boot com Limine (opcional).
-5. (Opcional) tirar o item "EFI fallback" do `limine.conf`.
-6. Unificar dotfiles na `main` com `hosts/` (no desktop).
+4. Unificar dotfiles na `main` com `hosts/` (no desktop).
