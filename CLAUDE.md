@@ -70,6 +70,9 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   (pendente: só chave — `install/ssh-somente-chave.sh`). Docker: portas `-p` ignoram o ufw (use `127.0.0.1:`).
 - Energia: **power-profiles-daemon** (troca automática: bateria = Economia, tomada = Equilíbrio, pela ilha).
   Bluetooth: `bluez` + `blueman` (applet roda escondido, só para PIN de pareamento).
+- **earlyoom** (`/etc/default/earlyoom`): sem memória, encerra o maior consumidor (prefere abas/Electron/Kdenlive;
+  nunca Hyprland, ilha, áudio). O `systemd-oomd` **não** serve: os apps do Hyprland ficam no cgroup da sessão.
+- `/boot` só para o root (fstab `fmask=0077,dmask=0077`): para ler o `limine.conf` use `sudo`.
 - Manutenção: `btrfs-scrub@-.timer` (mensal), `paccache.timer` (semanal). fstrim não precisa (discard=async).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
 - Login: `ly@tty2`.
@@ -93,7 +96,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
     `'hl.dsp.dpms({action = "off"})'`, `'hl.dsp.exec_cmd("...")'`.
   - Tecla principal **SUPER**. Todo atalho tem `description = "Categoria · O que faz"` (aparece no guia `SUPER+/`).
   - `hypr/scripts/`: `brightness.sh` (0% = mínimo útil da tela, passos de 5%), `screenshot.sh`, `record.sh`.
-  - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min.
+  - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
+    **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).
 - **Quickshell = "ilha dinâmica"** (`quickshell/`, ver `quickshell/README.md`): barra, notificações
   (substitui o swaync), launcher (`SUPER+Space`: apps, `:emoji`, `=conta`, `>comando`; `SUPER+V` clipboard;

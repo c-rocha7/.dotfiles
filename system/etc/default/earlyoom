@@ -1,0 +1,8 @@
+# earlyoom: encerra o processo que mais usa memória ANTES do notebook travar
+# (quando a RAM livre < 4% E a swap/zram livre < 10%).
+# Instalado por install/ajustes-sistema.sh. Depois de mudar: sudo systemctl restart earlyoom
+#
+# -n        avisa com notificação (aparece na ilha)
+# --avoid   nunca encerrar: desktop, áudio, login, sistema
+# --prefer  encerrar primeiro: abas do navegador, apps Electron, editores de vídeo
+EARLYOOM_ARGS="-m 4 -s 10 -r 3600 -n --avoid '^(Hyprland|qs|quickshell|Xwayland|hypridle|ly-dm|pipewire|pipewire-pulse|wireplumber|dbus-broker|dbus-broker-lau|systemd|systemd-.*|sshd|NetworkManager|wpa_supplicant)$' --prefer '^(Web Content|Isolated Web Co|electron|code|vesktop|obsidian|kdenlive|melt|java)$'"

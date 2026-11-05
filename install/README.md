@@ -10,6 +10,7 @@ conferem o estado antes de mexer e fazem backup do que alteram. Rodar com `sudo 
 | 3 | `fase3-limine-snapper.sh` | Snapshots no menu do Limine (limine-mkinitcpio-hook + limine-snapper-sync). **Reiniciar** e testar a entrada nova e um snapshot. |
 | 4 | `fase3-limpeza.sh` | Remove a entrada "backup manual", o kernel antigo, a entrada antiga da BIOS e o hook antigo. |
 | 5 | `fase4-secure-boot.sh` | Secure Boot com chaves próprias (sbctl) + hash do `limine.conf` no Limine; tira o "EFI fallback" do menu. Em partes: `preparar` → reiniciar → BIOS em Setup Mode → `chaves` → BIOS liga o Secure Boot → `status`. |
+| – | `ajustes-sistema.sh` | `/boot` só para o root (fstab `fmask/dmask=0077`) e earlyoom. |
 | – | `manutencao.sh` | Scrub mensal do Btrfs e limpeza semanal do cache do pacman. |
 | – | `ssh-somente-chave.sh` | **Pendente:** SSH só com chave (copiar a chave do desktop antes). |
 | – | `gen_emojis.py` | Regera a lista de emojis do launcher (instruções no arquivo). |

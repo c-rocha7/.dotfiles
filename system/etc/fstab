@@ -15,7 +15,7 @@ UUID=61b69d0d-6939-4d01-9bfd-a87c1bf4d558	/var/log  	btrfs     	rw,noatime,compr
 UUID=61b69d0d-6939-4d01-9bfd-a87c1bf4d558	/var/cache/pacman/pkg	btrfs     	rw,noatime,compress=zstd:3,ssd,discard=async,space_cache=v2,subvol=/@pkg	0 0
 
 # /dev/nvme0n1p1 LABEL=Boot
-UUID=583A-8631      	/boot     	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+UUID=583A-8631      	/boot     	vfat      	rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
 
 
 # Subvolumes fora do @ (não entram nos snapshots do sistema)

@@ -38,6 +38,8 @@ FILES=(
     /etc/nix/nix.conf
     /etc/systemd/system/nix-daemon.service
     /etc/systemd/system/nix-daemon.socket
+    # earlyoom (evita travar sem memória; install/ajustes-sistema.sh)
+    /etc/default/earlyoom
     # Firewall (ufw)
     /etc/ufw/user.rules
     /etc/ufw/user6.rules

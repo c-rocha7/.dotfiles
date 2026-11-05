@@ -23,6 +23,7 @@ sudo bash ~/.dotfiles/system/sync.sh
 | `etc/locale.*`, `etc/vconsole.conf`, `etc/hostname`, `etc/hosts` | Idioma pt_BR, teclado ABNT2, nome `vision-r15m` |
 | `etc/sudoers.d/*` | sudo para o grupo wheel e asteriscos ao digitar a senha |
 | `etc/nix/nix.conf`, `etc/systemd/system/nix-daemon.*` | Nix com o `/nix` em subvolume próprio (ver `install/fase1-subvolumes.sh`) |
+| `etc/default/earlyoom` | earlyoom: encerra o maior consumidor de memória antes de travar (nunca o desktop/áudio) |
 | `etc/ufw/user*.rules` | Firewall: só SSH da rede local |
 
 ## Numa reinstalação
