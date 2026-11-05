@@ -53,12 +53,32 @@ bindkey "^[[1;5C" forward-word
 # MISE
 eval "$(~/.local/bin/mise activate zsh)"
 
+# DIRENV
+eval "$(direnv hook zsh)"
+
 # Função de atualização
 mi-update-all() {
-  sudo pacman -Syu mise
+  mise self-update
   mise upgrade
   mise install
   echo "🚀 Sistema e ferramentas atualizados!"
+}
+
+# Atualiza tudo de uma vez. O snap-pac tira um snapshot antes/depois do pacman.
+#   1. sistema + AUR (yay, pede confirmação)   3. Nix (flake.lock + home-manager)
+#   2. flatpaks                                4. mise (ele mesmo + ferramentas)
+atualizar() {
+  echo "\n==> 1/4 Sistema e AUR (yay)"
+  yay -Syu || return 1
+  echo "\n==> 2/4 Flatpaks"
+  flatpak update -y
+  echo "\n==> 3/4 Nix (flake + home-manager)"
+  nix flake update --flake ~/.dotfiles/nix-dotfiles \
+    && home-manager switch --flake ~/.dotfiles/nix-dotfiles#7aauac \
+    && kbuildsycoca6 >/dev/null 2>&1
+  echo "\n==> 4/4 mise"
+  mise self-update -y && mise upgrade
+  echo "\n✅ Tudo atualizado."
 }
 
 # ===============================================================
@@ -92,8 +112,10 @@ alias mi-clean="mise prune --dry-run"
 alias mi-purge="mise prune -y"
 
 # Nix Shortcuts
-alias hmsf="home-manager switch --flake ~/.nix-dotfiles#cauaarch"
-alias nfu="nix flake update --flake ~/.nix-dotfiles"
+# kbuildsycoca6: atualiza o catálogo de apps do KDE (Dolphin "Abrir com") com o que o Nix instalou
+alias hmsf="home-manager switch --flake ~/.dotfiles/nix-dotfiles#7aauac && kbuildsycoca6 >/dev/null 2>&1"
+alias nfu="nix flake update --flake ~/.dotfiles/nix-dotfiles"
+alias hmn="home-manager news --flake ~/.dotfiles/nix-dotfiles#7aauac"
 
 # ===============================================================
 # 7. SYNTAX HIGHLIGHTING & AUTOSUGGESTIONS (SEMPRE NO FINAL)

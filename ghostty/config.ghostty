@@ -1,0 +1,10 @@
+# Configuração do Ghostty
+# Opções: `ghostty +show-config --default --docs` ou https://ghostty.org/docs/config
+# Recarregar sem fechar: Ctrl+Shift+, (algumas opções só valem em janelas novas)
+
+# Cores: Catppuccin Mocha (tema embutido no Ghostty, o mesmo da ilha/Quickshell)
+theme = Catppuccin Mocha
+
+# Fonte: a mesma dos apps GTK/Qt (FiraCode Nerd Font, tamanho 12, padrão do sistema)
+font-family = FiraCode Nerd Font
+font-size = 12
