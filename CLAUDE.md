@@ -75,7 +75,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - `/boot` só para o root (fstab `fmask=0077,dmask=0077`): para ler o `limine.conf` use `sudo`.
 - Manutenção: `btrfs-scrub@-.timer` (mensal), `paccache.timer` (semanal). fstrim não precisa (discard=async).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
-- Login: `ly@tty2`.
+- Login: `ly@tty2`. **Chaveiro: gnome-keyring**, desbloqueado no login pelo PAM do ly (o aviso
+  `gkr-pam: unable to locate daemon control file` é normal). VS Code: `password-store` no `~/.vscode/argv.json`;
+  Electron do Nix (vesktop, obsidian): `--password-store=gnome-libsecret` via `_electron-keyring.nix`
+  (o Obsidian usa; o Vesktop não criptografa nada, o login fica em `~/.config/vesktop/sessionData`, modo 700).
 
 ## 6. Gráficos, áudio, apps
 

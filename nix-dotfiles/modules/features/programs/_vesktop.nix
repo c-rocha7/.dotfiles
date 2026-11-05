@@ -1,8 +1,10 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.vesktop = {
     enable = true;
+    # Login do Discord guardado no chaveiro (ver _electron-keyring.nix)
+    package = import ./_electron-keyring.nix pkgs pkgs.vesktop "vesktop";
 
     vencord = {
       settings = {
