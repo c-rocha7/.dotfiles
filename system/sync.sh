@@ -25,6 +25,7 @@ FILES=(
     /etc/pacman.d/chaotic-mirrorlist
     # Snapper (snapshots do /)
     /etc/snapper/configs/root
+    /etc/snapper/configs/home
     # Idioma, teclado do console, nome da máquina
     /etc/locale.gen
     /etc/locale.conf
@@ -45,6 +46,10 @@ FILES=(
     /etc/smartmontools/smartd-notificar.sh
     # plocate: pastas fora da indexação (install/plocate.sh)
     /etc/updatedb.conf
+    # Rede: DNS criptografado (systemd-resolved), nomes .local/impressoras (install/rede-impressora.sh)
+    /etc/systemd/resolved.conf.d/10-dns-privado.conf
+    /etc/NetworkManager/conf.d/dns.conf
+    /etc/nsswitch.conf
     # Firewall (ufw)
     /etc/ufw/user.rules
     /etc/ufw/user6.rules

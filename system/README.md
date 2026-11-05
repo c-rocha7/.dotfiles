@@ -19,13 +19,15 @@ sudo bash ~/.dotfiles/system/sync.sh
 | `etc/fstab` | Subvolumes Btrfs (`@`, `@home`, `@log`, `@pkg`, `@nix`, `@docker`, `@snapshots`) |
 | `etc/systemd/zram-generator.conf` | Swap em RAM (zram) |
 | `etc/pacman.conf`, `etc/pacman.d/chaotic-mirrorlist` | Cores, downloads paralelos, multilib, Chaotic-AUR |
-| `etc/snapper/configs/root` | Limites dos snapshots do `/` |
+| `etc/snapper/configs/root`, `etc/snapper/configs/home` | Limites dos snapshots do `/` e do `/home` |
 | `etc/locale.*`, `etc/vconsole.conf`, `etc/hostname`, `etc/hosts` | Idioma pt_BR, teclado ABNT2, nome `vision-r15m` |
 | `etc/sudoers.d/*` | sudo para o grupo wheel e asteriscos ao digitar a senha |
 | `etc/nix/nix.conf`, `etc/systemd/system/nix-daemon.*` | Nix com o `/nix` em subvolume próprio (ver `install/fase1-subvolumes.sh`) |
 | `etc/default/earlyoom` | earlyoom: encerra o maior consumidor de memória antes de travar (nunca o desktop/áudio) |
 | `etc/smartd.conf`, `etc/smartmontools/smartd-notificar.sh` | smartd vigia o NVMe e avisa na ilha (notificação crítica) |
 | `etc/updatedb.conf` | plocate: não indexa `/.snapshots`, `/nix` nem o Docker |
+| `etc/systemd/resolved.conf.d/10-dns-privado.conf`, `etc/NetworkManager/conf.d/dns.conf` | DNS over TLS (Quad9, modo flexível) via systemd-resolved |
+| `etc/nsswitch.conf` | `mdns_minimal`: nomes `.local` e impressoras de rede (avahi) |
 | `etc/ufw/user*.rules` | Firewall: só SSH da rede local |
 
 ## Numa reinstalação

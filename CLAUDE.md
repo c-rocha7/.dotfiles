@@ -27,7 +27,7 @@
 
 ## 2. BIOS (AMI Aptio V1.05.X)
 
-UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM off (UEFI), Fast Boot off,
+UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM off (UEFI), **Fast Boot on**,
 **Secure Boot on** (chaves próprias do sbctl + Microsoft; `install/fase4-secure-boot.sh`). Entradas UEFI: `Limine` (`\EFI\limine\limine_x64.efi`) e
 `UEFI OS` (`\EFI\BOOT\BOOTX64.EFI`, também o Limine). O firmware às vezes reordena o boot sozinho.
 
@@ -39,6 +39,9 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   fstab sem `subvolid=`. Sem swap em disco: só zram.
 - **Snapper** (config `root`, só o `@`): snap-pac (antes/depois do pacman), timeline 5h/7d/2s/1m,
   10 do pacman, grupo wheel lê sem sudo. GUI: `btrfs-assistant`.
+- **Snapper `home`** (`install/snapshots-home.sh`): `/home` de hora em hora (24h/7d/4s/3m), em `/home/.snapshots`.
+  `~/.cache` e `~/.local/share/Steam` são subvolumes próprios (fora dos snapshots). **Não é backup** (mesmo SSD).
+  Recuperar: copiar de `/home/.snapshots/<N>/snapshot/7aauac/...`.
 - `/nix` e Docker ficam **fora** do `@` de propósito: restaurar o `/` não pode quebrar o Nix.
   O `nix-daemon.service/.socket` foi **copiado** para `/etc/systemd/system` (o link para dentro do /nix
   não existe no boot antes de montar o `@nix`).
@@ -66,7 +69,9 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 
 - Fuso `America/Sao_Paulo`, `LANG=pt_BR.UTF-8`, console `br-abnt2`, sudo via `/etc/sudoers.d/`.
 - `pacman.conf`: Color, ParallelDownloads=10, multilib, **Chaotic-AUR**. `yay`, `flatpak`.
-- Rede: NetworkManager. Firewall `ufw` (só SSH da LAN 192.168.15.0/24). **`sshd` ativo com senha**
+- Rede: NetworkManager (sem `wait-online`: boot ~3 s mais rápido). **DNS over TLS** via systemd-resolved
+  (Quad9, Cloudflare de reserva, modo `opportunistic`; `resolvectl status`). Firewall `ufw` (SSH só da LAN 192.168.15.0/24;
+  mDNS 5353/udp liberado). **`sshd` ativo com senha**
   (pendente: só chave — `install/ssh-somente-chave.sh`). Docker: portas `-p` ignoram o ufw (use `127.0.0.1:`).
 - Energia: **power-profiles-daemon** (troca automática: bateria = Economia, tomada = Equilíbrio, pela ilha).
   Bluetooth: `bluez` + `blueman` (applet roda escondido, só para PIN de pareamento).
@@ -77,6 +82,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - **SSD** (Neo Forza NSP095P3451, 512 GB): `smartd` vigia o `/dev/nvme0` e avisa na ilha
   (`/etc/smartmontools/smartd-notificar.sh`). Em 05/11: 0% de desgaste, 2,01 TB gravados, 15 desligamentos bruscos.
 - Busca de arquivos: `plocate` (`locate nome`; não indexa `/.snapshots`, `/nix`, Docker). Exemplos de comandos: `tldr` (Nix).
+- **Impressão**: CUPS sem driver (IPP Everywhere) + avahi/nss-mdns (`mdns_minimal` no nsswitch); painel
+  `system-config-printer` ou http://localhost:631 (`install/rede-impressora.sh`).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
 - Login: `ly@tty2`. **Chaveiro: gnome-keyring**, desbloqueado no login pelo PAM do ly (o aviso
   `gkr-pam: unable to locate daemon control file` é normal). VS Code: `password-store` no `~/.vscode/argv.json`;
@@ -100,6 +107,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - **Hyprland em Lua** (`hypr/hyprland.lua`): nada de sintaxe antiga. API em `/usr/share/hypr/stubs/hl.meta.lua`.
   - `hyprctl dispatch` exige **Lua**: `hyprctl dispatch 'hl.dsp.focus({ workspace = 2 })'`,
     `'hl.dsp.dpms({action = "off"})'`, `'hl.dsp.exec_cmd("...")'`.
+  - Monitor externo: regra genérica (preferred, à direita); `SUPER+SHIFT+P`/`XF86Display` alterna estender →
+    espelhar → só externa → só notebook (`scripts/monitor.sh`, aplica com `hyprctl eval 'hl.monitor{...}'`).
   - Tecla principal **SUPER**. Todo atalho tem `description = "Categoria · O que faz"` (aparece no guia `SUPER+/`).
   - `hypr/scripts/`: `brightness.sh` (0% = mínimo útil da tela, passos de 5%), `screenshot.sh`, `record.sh`.
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,

@@ -9,6 +9,15 @@ hl.monitor({
     scale = 1,
 })
 
+-- Qualquer tela externa (HDMI, DisplayPort, USB-C): resolução ideal, à direita do notebook.
+-- Trocar o modo (estender/espelhar/só externa/só notebook): SUPER+SHIFT+P (scripts/monitor.sh).
+hl.monitor({
+    output = "",
+    mode = "preferred",
+    position = "auto-right",
+    scale = 1,
+})
+
 -- hl.monitor({
 -- output = "DP-2",
 -- mode = "1920x1080@240",
@@ -312,6 +321,9 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "Apps �
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(menu),
     { description = "Ilha · Launcher (apps, :emoji, =conta, >comando)" })
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo(), { description = "Janelas · Pseudo-tile" })
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd([[bash -c "~/.config/hypr/scripts/monitor.sh"]]),
+    { description = "Tela · Tela externa: estender → espelhar → só externa → só notebook" })
+hl.bind("XF86Display", hl.dsp.exec_cmd([[bash -c "~/.config/hypr/scripts/monitor.sh"]]))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), { description = "Janelas · Tela cheia" })
 
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }), { description = "Janelas · Focar à esquerda" })

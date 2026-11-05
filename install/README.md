@@ -13,6 +13,8 @@ conferem o estado antes de mexer e fazem backup do que alteram. Rodar com `sudo 
 | – | `ajustes-sistema.sh` | `/boot` só para o root (fstab `fmask/dmask=0077`) e earlyoom. |
 | – | `ssd-saude.sh` | smartmontools + smartd vigiando o SSD, com aviso na ilha e notificação de teste. |
 | – | `plocate.sh` | Busca de arquivos (`locate`), sem indexar snapshots, `/nix` e Docker. |
+| – | `snapshots-home.sh` | Snapshots horários do `/home` (snapper); `~/.cache` e Steam ficam fora. Não é backup. |
+| – | `rede-impressora.sh` | Boot sem esperar a rede, DNS criptografado (desfaz se falhar) e impressora de rede sem driver. |
 | – | `manutencao.sh` | Scrub mensal do Btrfs e limpeza semanal do cache do pacman. |
 | – | `ssh-somente-chave.sh` | **Pendente:** SSH só com chave (copiar a chave do desktop antes). |
 | – | `gen_emojis.py` | Regera a lista de emojis do launcher (instruções no arquivo). |

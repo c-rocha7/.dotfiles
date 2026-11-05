@@ -20,6 +20,9 @@
 ### tuple ### allow tcp 22 0.0.0.0/0 any 192.168.15.0/24 in
 -A ufw-user-input -p tcp --dport 22 -s 192.168.15.0/24 -j ACCEPT
 
+### tuple ### allow udp 5353 0.0.0.0/0 any 0.0.0.0/0 in comment=6d444e533a20696d70726573736f72617320646520726564652065206e6f6d6573202e6c6f63616c
+-A ufw-user-input -p udp --dport 5353 -j ACCEPT
+
 ### END RULES ###
 
 ### LOGGING ###
