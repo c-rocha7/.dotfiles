@@ -37,6 +37,9 @@ FILES=(
     /etc/ly/catppuccin.dur
     /etc/kmscon/kmscon.conf
     /etc/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf
+    /etc/systemd/system/ly-kmsconvt@tty2.service.d/20-mostrar-tty2.conf
+    # Boot com Plymouth (install/plymouth.sh)
+    /etc/plymouth/plymouthd.conf
     /etc/hostname
     /etc/hosts
     # sudo (drop-ins; nunca editar /etc/sudoers direto)

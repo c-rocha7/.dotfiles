@@ -1,0 +1,39 @@
+// Tema "Noite Catppuccin" (gerado por install/gen_ly_dur.py; não editar à mão).
+// Fundo com estrelas piscando (4 fases), logo do Arch e anel girando.
+
+Window.SetBackgroundTopColor(0.118, 0.118, 0.180);
+Window.SetBackgroundBottomColor(0.118, 0.118, 0.180);
+sw = Window.GetWidth();
+sh = Window.GetHeight();
+
+for (i = 0; i < 4; i++)
+    fundo[i] = Image("fundo-" + i + ".png").Scale(sw, sh);
+bg = Sprite(fundo[0]);
+bg.SetZ(-100);
+
+logo_img = Image("logo.png");
+logo = Sprite(logo_img);
+logo.SetPosition(sw / 2 - logo_img.GetWidth() / 2, sh * 0.42 - logo_img.GetHeight() / 2, 10);
+
+for (i = 0; i < 12; i++)
+    anel[i] = Image("carregando-" + i + ".png");
+spinner = Sprite(anel[0]);
+spinner.SetPosition(sw / 2 - anel[0].GetWidth() / 2, sh * 0.42 + logo_img.GetHeight() / 2 + 48, 10);
+
+tick = 0;
+fun refresh_callback() {
+    tick++;
+    spinner.SetImage(anel[Math.Int(tick / 4) % 12]);      // ~12 passos por segundo (50 Hz / 4)
+    bg.SetImage(fundo[Math.Int(tick / 33) % 4]);       // estrelas: ~1,5 fase por segundo
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+// Mensagens (ex.: fsck) aparecem discretas embaixo do anel.
+msg = Sprite();
+msg.SetPosition(sw / 2, sh * 0.42 + logo_img.GetHeight() / 2 + 140, 10);
+fun message_callback(text) {
+    img = Image.Text(text, 0.73, 0.76, 0.87);
+    msg.SetImage(img);
+    msg.SetX(sw / 2 - img.GetWidth() / 2);
+}
+Plymouth.SetMessageFunction(message_callback);

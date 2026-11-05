@@ -66,6 +66,15 @@ aplicar() {
     echo "Próximo: sudo bash $0 kmscon-teste   (fonte FiraCode igual à do sistema)"
 }
 
+# Drop-ins do ly com kmscon: fonte do sistema (todas as instâncias) e troca para o tty2 no boot.
+install_kmscon_dropins() {
+    install -D -m 644 "$SRC/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf" \
+        "/etc/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf"
+    install -D -m 644 "$SRC/systemd/system/ly-kmsconvt@tty2.service.d/20-mostrar-tty2.conf" \
+        "/etc/systemd/system/ly-kmsconvt@tty2.service.d/20-mostrar-tty2.conf"
+    systemctl daemon-reload
+}
+
 kmscon_teste() {
     echo ">> 1/3 kmscon"
     pacman -S --needed kmscon inotify-tools
@@ -73,8 +82,7 @@ kmscon_teste() {
 
     echo ">> 2/3 Fonte e paleta (/etc/kmscon/kmscon.conf) e serviço do ly com kmscon"
     install -D -m 644 "$SRC/kmscon/kmscon.conf" /etc/kmscon/kmscon.conf
-    install -D -m 644 "$SRC/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf" \
-        "/etc/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf"
+    install_kmscon_dropins
     [[ -f /etc/ly/catppuccin.dur ]] || { echo "Rode antes: sudo bash $0"; exit 1; }
     systemctl daemon-reload
 
@@ -91,6 +99,7 @@ kmscon_teste() {
 kmscon_ativar() {
     [[ -f /etc/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf ]] || { echo "Rode antes: sudo bash $0 kmscon-teste"; exit 1; }
     stop_tests
+    install_kmscon_dropins
     systemctl disable ly@tty2.service
     systemctl enable ly-kmsconvt@tty2.service
     echo

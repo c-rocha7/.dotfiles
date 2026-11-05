@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Noite Catppuccin
+Description=Mesma cena do Limine e do ly: montanhas, estrelas piscando, logo do Arch e anel de carregamento.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/noite-catppuccin
+ScriptFile=/usr/share/plymouth/themes/noite-catppuccin/noite-catppuccin.script

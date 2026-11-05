@@ -10,7 +10,8 @@ sudo bash ~/.dotfiles/system/sync.sh
 ```
 
 `system/boot/limine-tema/` não é cópia: são o wallpaper e a fonte do menu do Limine, gerados por
-`install/gen_ly_dur.py` e instalados por `install/limine-tema.sh`.
+`install/gen_ly_dur.py` e instalados por `install/limine-tema.sh`. Do mesmo jeito,
+`system/usr/share/plymouth/themes/noite-catppuccin/` é o tema do Plymouth (instalado por `install/plymouth.sh`).
 
 ## O que tem aqui
 
@@ -32,6 +33,7 @@ sudo bash ~/.dotfiles/system/sync.sh
 | `etc/updatedb.conf` | plocate: não indexa `/.snapshots`, `/nix` nem o Docker |
 | `etc/systemd/resolved.conf.d/10-dns-privado.conf`, `etc/NetworkManager/conf.d/dns.conf` | DNS over TLS (Quad9, modo flexível) via systemd-resolved |
 | `etc/nsswitch.conf` | `mdns_minimal`: nomes `.local` e impressoras de rede (avahi) |
+| `etc/plymouth/plymouthd.conf`, `etc/systemd/system/ly-kmsconvt@tty2.service.d/` | Tema do boot; o ly do tty2 troca a tela para ele (`chvt 2`) ao abrir |
 | `etc/ufw/user*.rules` | Firewall: só SSH da rede local |
 
 ## Numa reinstalação

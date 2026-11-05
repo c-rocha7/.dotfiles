@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Visual do menu do Limine: o mesmo desenho do ly (montanhas e estrelas Catppuccin) como wallpaper,
-# paleta Catppuccin Mocha, fonte Terminus negrito 2x (igual aos TTYs), texto de marca, 3 s.
+# paleta Catppuccin Mocha, fonte Terminus negrito 2x (igual aos TTYs), texto de marca, 3 s,
+# "terse" (sem as mensagens "Loading kernel..." ao iniciar).
 #
 #   sudo bash limine-tema.sh            aplica (ou atualiza depois de rodar install/gen_ly_dur.py)
 #   sudo bash limine-tema.sh desfazer   tira o bloco de visual (volta ao padrão, mantém timeout 3)
@@ -86,6 +87,7 @@ aplicar() {
     write_header "$BEGIN
 # Catppuccin Mocha. Arquivos com hash (Secure Boot). Não edite à mão: rode install/limine-tema.sh.
 timeout: 3
+terse: yes
 interface_resolution: 1920x1080
 interface_branding: Arch Linux - vision-r15m
 interface_branding_colour: CBA6F7

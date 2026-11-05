@@ -49,7 +49,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 ## 4. Boot (Limine + snapshots)
 
 - Kernel `linux-zen` + `amd-ucode` (microcódigo embutido no initramfs). Hooks do mkinitcpio:
-  `base systemd autodetect microcode modconf kms keyboard sd-vconsole block filesystems sd-btrfs-overlayfs fsck`.
+  `base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block filesystems sd-btrfs-overlayfs fsck`.
 - **`limine-mkinitcpio-hook` + `limine-snapper-sync`** (Chaotic-AUR): config em `/etc/default/limine`;
   kernel/initramfs em `/boot/<machine-id>/linux-zen/`; `limine.conf` **gerado** (não editar à mão).
   - O kernel é gerenciado pelo **`limine-update`** — não use `mkinitcpio -P`.
@@ -68,6 +68,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   cabeçalho): wallpaper = desenho do ly, Catppuccin, Terminus negrito 2x, timeout 3. Arquivos em `/boot/limine-tema/`
   com `#hash` no caminho (Secure Boot: sem hash é ignorado, hash errado trava). Mudou o desenho? Rode o
   `gen_ly_dur.py` e o script de novo (ele confere tudo e restaura o backup se falhar).
+- **Boot sem texto** (`install/plymouth.sh`): Plymouth com o tema `noite-catppuccin` (mesma cena, estrelas piscando,
+  logo do Arch, anel girando; gerado pelo `gen_ly_dur.py`), hook `plymouth` depois do `systemd`, kernel com
+  `quiet splash loglevel=3 ...` e Limine `terse`. ESC no boot mostra o texto. **Não use `plymouth quit --retain-splash`**:
+  deixa o tty1 em modo gráfico e o `chvt 2` do ly (drop-in `ly-kmsconvt@tty2.service.d`) espera 5 s.
 
 ## 5. Sistema
 

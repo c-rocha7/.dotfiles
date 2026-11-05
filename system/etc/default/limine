@@ -3,7 +3,7 @@
 
 ### Boot
 ESP_PATH="/boot"
-KERNEL_CMDLINE[default]+=root=UUID=61b69d0d-6939-4d01-9bfd-a87c1bf4d558 rw rootflags=subvol=@
+KERNEL_CMDLINE[default]+=root=UUID=61b69d0d-6939-4d01-9bfd-a87c1bf4d558 rw rootflags=subvol=@ quiet splash loglevel=3 rd.udev.log_level=3 systemd.show_status=auto rd.systemd.show_status=auto
 ENABLE_VERIFICATION=yes
 BOOT_ORDER="*, *fallback, Snapshots"
 
