@@ -24,6 +24,13 @@
       "io.missioncenter.MissionCenter"
       "org.ferdium.Ferdium"
       "com.spotify.Client"
+
+      # Navicat Premium 18 (repositório próprio do Navicat; o runtime vem do Flathub).
+      # Se o Navicat atualizar o .flatpakref, o hash muda: nix-prefetch-url <url>
+      {
+        flatpakref = "https://dn.navicat.com/flatpak/flatpakref/navicat18/com.navicat.premium.en.flatpakref";
+        sha256 = "1lj2xj6ag2ppdp9wg7nl3payac7ykykj86bd6ynyg7izzyjscvi4";
+      }
     ];
 
     update.auto.enable = true;
