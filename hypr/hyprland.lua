@@ -332,7 +332,8 @@ hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }), { description = 
 hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }), { description = "Janelas · Focar abaixo" })
 
 hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }), { description = "Janelas · Focar à esquerda (vim)" })
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }), { description = "Janelas · Focar à direita (vim)" })
+-- SUPER+L virou "bloquear tela"; focar à direita fica na seta (SUPER+→)
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Sessão · Bloquear a tela" })
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }), { description = "Janelas · Focar acima (vim)" })
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }), { description = "Janelas · Focar abaixo (vim)" })
 

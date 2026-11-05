@@ -9,6 +9,9 @@ Atualizar as cópias (antes de commitar):
 sudo bash ~/.dotfiles/system/sync.sh
 ```
 
+`system/boot/limine-tema/` não é cópia: são o wallpaper e a fonte do menu do Limine, gerados por
+`install/gen_ly_dur.py` e instalados por `install/limine-tema.sh`.
+
 ## O que tem aqui
 
 | Arquivo | Para quê |
@@ -20,6 +23,7 @@ sudo bash ~/.dotfiles/system/sync.sh
 | `etc/systemd/zram-generator.conf` | Swap em RAM (zram) |
 | `etc/pacman.conf`, `etc/pacman.d/chaotic-mirrorlist` | Cores, downloads paralelos, multilib, Chaotic-AUR |
 | `etc/snapper/configs/root`, `etc/snapper/configs/home` | Limites dos snapshots do `/` e do `/home` |
+| `etc/ly/`, `etc/kmscon/`, `etc/systemd/system/ly-kmsconvt@.service.d/` | Tela de login: config (Catppuccin, relógio grande), `startup.sh` (paleta do console), `lang/ptbr.ini`, desenho `catppuccin.dur` (gerado por `install/gen_ly_dur.py`); kmscon com FiraCode 16 px |
 | `etc/locale.*`, `etc/vconsole.conf`, `etc/hostname`, `etc/hosts` | Idioma pt_BR, teclado ABNT2, nome `vision-r15m` |
 | `etc/sudoers.d/*` | sudo para o grupo wheel e asteriscos ao digitar a senha |
 | `etc/nix/nix.conf`, `etc/systemd/system/nix-daemon.*` | Nix com o `/nix` em subvolume próprio (ver `install/fase1-subvolumes.sh`) |

@@ -64,6 +64,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - **Nunca edite o `limine.conf` à mão**: o hash não bate e o boot trava ("CHECKSUM MISMATCH"). Recuperar:
     BIOS → Secure Boot off; ver o cabeçalho do script. Conferir: `sudo bash install/fase4-secure-boot.sh status`.
   - "EFI fallback" fora do menu (`FIND_BOOTLOADERS=no` + entrada removida).
+- **Visual do menu** (`install/limine-tema.sh`): bloco marcado no topo do `limine.conf` (as ferramentas mantêm o
+  cabeçalho): wallpaper = desenho do ly, Catppuccin, Terminus negrito 2x, timeout 3. Arquivos em `/boot/limine-tema/`
+  com `#hash` no caminho (Secure Boot: sem hash é ignorado, hash errado trava). Mudou o desenho? Rode o
+  `gen_ly_dur.py` e o script de novo (ele confere tudo e restaura o backup se falhar).
 
 ## 5. Sistema
 
@@ -85,7 +89,12 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - **Impressão**: CUPS sem driver (IPP Everywhere) + avahi/nss-mdns (`mdns_minimal` no nsswitch); painel
   `system-config-printer` ou http://localhost:631 (`install/rede-impressora.sh`).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
-- Login: `ly@tty2`. **Chaveiro: gnome-keyring**, desbloqueado no login pelo PAM do ly (o aviso
+- Login: **`ly-kmsconvt@tty2`** (ly dentro do kmscon: FiraCode Nerd Font Mono 16 px = 12 pt, paleta Catppuccin em
+  `/etc/kmscon/kmscon.conf`; drop-in tira o `--font-engine unifont`). Desenho de fundo `catppuccin.dur`
+  (`install/gen_ly_dur.py`), relógio grande, pt_BR completo (`lang/ptbr.ini`). `install/ly.sh` (etapas, teste no tty3;
+  `kmscon-desfazer` volta ao `ly@tty2`). No kmscon o ly não lê as luzes do teclado: `hide_keyboard_locks` e o erro
+  do num lock aparece como "bem-vindo de volta". TTYs: fonte Terminus `ter-v24b`. O ly futuro troca o `config.ini`
+  por `config.lua`: migrar ao atualizar. **Chaveiro: gnome-keyring**, desbloqueado no login pelo PAM do ly (o aviso
   `gkr-pam: unable to locate daemon control file` é normal). VS Code: `password-store` no `~/.vscode/argv.json`;
   Electron do Nix (vesktop, obsidian): `--password-store=gnome-libsecret` via `_electron-keyring.nix`
   (o Obsidian usa; o Vesktop não criptografa nada, o login fica em `~/.config/vesktop/sessionData`, modo 700).
@@ -117,7 +126,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - **Quickshell = "ilha dinâmica"** (`quickshell/`, ver `quickshell/README.md`): barra, notificações
   (substitui o swaync), launcher (`SUPER+Space`: apps, `:emoji`, `=conta`, `>comando`; `SUPER+V` clipboard;
   `SUPER+Tab` janelas), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
-  gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (PAM `hyprlock`),
+  gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),
   atualizações pendentes na ilha aberta (`Updates.qml`; clique roda o `atualizar`).
   - Singletons: `pragma Singleton` tem que ser a **primeira linha**; `shell.qml` precisa de
     `//@ pragma UseQApplication` (menus da bandeja).

@@ -30,6 +30,13 @@ FILES=(
     /etc/locale.gen
     /etc/locale.conf
     /etc/vconsole.conf
+    # Tela de login ly (Catppuccin, pt_BR completo; install/ly.sh)
+    /etc/ly/config.ini
+    /etc/ly/startup.sh
+    /etc/ly/lang/ptbr.ini
+    /etc/ly/catppuccin.dur
+    /etc/kmscon/kmscon.conf
+    /etc/systemd/system/ly-kmsconvt@.service.d/10-fonte-sistema.conf
     /etc/hostname
     /etc/hosts
     # sudo (drop-ins; nunca editar /etc/sudoers direto)
@@ -70,7 +77,7 @@ done
 # Arquivos do sudoers.d e do snapper vêm com permissão só do root: deixa legível para o git.
 chown -R "$OWNER:$OWNER" "$DEST/etc"
 find "$DEST/etc" -type f -exec chmod 644 {} +
-chmod 755 "$DEST/etc/boot/hooks/post.d/"* "$DEST/etc/smartmontools/"*.sh 2>/dev/null || true
+chmod 755 "$DEST/etc/boot/hooks/post.d/"* "$DEST/etc/smartmontools/"*.sh "$DEST/etc/ly/startup.sh" 2>/dev/null || true
 
 echo
 echo "$copied arquivos copiados para $DEST/etc"

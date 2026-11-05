@@ -15,6 +15,9 @@ conferem o estado antes de mexer e fazem backup do que alteram. Rodar com `sudo 
 | – | `plocate.sh` | Busca de arquivos (`locate`), sem indexar snapshots, `/nix` e Docker. |
 | – | `snapshots-home.sh` | Snapshots horários do `/home` (snapper); `~/.cache` e Steam ficam fora. Não é backup. |
 | – | `rede-impressora.sh` | Boot sem esperar a rede, DNS criptografado (desfaz se falhar) e impressora de rede sem driver. |
+| – | `ly.sh` | Tela de login ly: Catppuccin, desenho de fundo, relógio grande, pt_BR completo. Em etapas: aplicar → `kmscon-teste` → `kmscon-ativar` (FiraCode igual ao sistema). Teste no tty3. |
+| – | `gen_ly_dur.py` | Gera o desenho "noite Catppuccin": fundo do ly (`.dur`), wallpaper e fonte do Limine. |
+| – | `limine-tema.sh` | Visual do menu do Limine (wallpaper do ly, Catppuccin, Terminus 2x), com hash para o Secure Boot; confere e desfaz sozinho se falhar. |
 | – | `manutencao.sh` | Scrub mensal do Btrfs e limpeza semanal do cache do pacman. |
 | – | `ssh-somente-chave.sh` | **Pendente:** SSH só com chave (copiar a chave do desktop antes). |
 | – | `gen_emojis.py` | Regera a lista de emojis do launcher (instruções no arquivo). |
