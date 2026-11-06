@@ -90,6 +90,11 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - **SSD** (Neo Forza NSP095P3451, 512 GB): `smartd` vigia o `/dev/nvme0` e avisa na ilha
   (`/etc/smartmontools/smartd-notificar.sh`). Em 05/11: 0% de desgaste, 2,01 TB gravados, 15 desligamentos bruscos.
 - Busca de arquivos: `plocate` (`locate nome`; não indexa `/.snapshots`, `/nix`, Docker). Exemplos de comandos: `tldr` (Nix).
+- **Minitela** (tela de 1,54" acima do teclado; `minitela/`, ver README): controlador GC9002 por USB serial
+  (`0324:0324`, `/dev/minitela`, regra udev `uaccess` em `install/minitela.sh`). Serviço do usuário `minitela.service`
+  (Python, só stdlib): relógio, bateria, Wi-Fi, BT, notificações da ilha, apaga no bloqueio/suspensão. Botão
+  `XF86Launch7` = próxima página/apagar. **Só SET_REGISTER**, nunca HANDSHAKE/gravação; sem texto vazio; 0,15 s
+  entre comandos; só envia o que mudou. Imagens próprias (gravam a flash) não implementadas.
 - **Impressão**: CUPS sem driver (IPP Everywhere) + avahi/nss-mdns (`mdns_minimal` no nsswitch); painel
   `system-config-printer` ou http://localhost:631 (`install/rede-impressora.sh`).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).

@@ -1,0 +1,4 @@
+# Minitela do Positivo Vision R15M (controlador GC9002 via USB serial, CherryUSB 0324:0324).
+# Libera a porta para quem está logado na frente do notebook (uaccess), sem abrir para todos,
+# e cria o atalho estável /dev/minitela. Instalado por install/minitela.sh.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0324", ATTRS{idProduct}=="0324", TAG+="uaccess", SYMLINK+="minitela"

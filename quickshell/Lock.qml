@@ -76,6 +76,9 @@ Singleton {
                 root.failures = 0;
                 root.status = "";
                 persist.locked = false;
+                // Avisa o logind (sinal "Unlock"): o SUPER+L/hypridle bloqueiam por ele, e quem
+                // escuta o bloqueio (ex.: a minitela, que apaga) precisa saber que desbloqueou.
+                Quickshell.execDetached(["loginctl", "unlock-session"]);
             } else {
                 root.failures += 1;
                 // O Arch (pam_faillock) bloqueia a conta por 10 min após 3 senhas erradas

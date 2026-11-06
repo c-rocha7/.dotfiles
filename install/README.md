@@ -19,6 +19,7 @@ conferem o estado antes de mexer e fazem backup do que alteram. Rodar com `sudo 
 | – | `gen_ly_dur.py` | Gera o desenho "noite Catppuccin": fundo do ly (`.dur`), wallpaper e fonte do Limine. |
 | – | `limine-tema.sh` | Visual do menu do Limine (wallpaper do ly, Catppuccin, Terminus 2x), com hash para o Secure Boot; confere e desfaz sozinho se falhar. |
 | – | `plymouth.sh` | Boot sem texto: Plymouth com a cena do Limine/ly (estrelas, logo do Arch, anel girando); `desfazer` volta ao texto. |
+| – | `minitela.sh` | Permissão da minitela (udev `uaccess`, `/dev/minitela`); o serviço fica em `minitela/`. |
 | – | `manutencao.sh` | Scrub mensal do Btrfs e limpeza semanal do cache do pacman. |
 | – | `ssh-somente-chave.sh` | **Pendente:** SSH só com chave (copiar a chave do desktop antes). |
 | – | `gen_emojis.py` | Regera a lista de emojis do launcher (instruções no arquivo). |

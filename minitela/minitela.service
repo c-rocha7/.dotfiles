@@ -1,0 +1,12 @@
+# Serviço do usuário da minitela. Ligado por install/minitela.sh (systemctl --user enable).
+[Unit]
+Description=Minitela do Positivo Vision R15M (relógio, bateria, notificações)
+After=dbus.socket
+
+[Service]
+ExecStart=/usr/bin/python3 -I %h/.dotfiles/minitela/minitela.py daemon --brilho 60
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

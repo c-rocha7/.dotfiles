@@ -60,6 +60,8 @@ FILES=(
     /etc/systemd/resolved.conf.d/10-dns-privado.conf
     /etc/NetworkManager/conf.d/dns.conf
     /etc/nsswitch.conf
+    # Minitela: porta liberada para o usuário logado (install/minitela.sh)
+    /etc/udev/rules.d/70-minitela.rules
     # Firewall (ufw)
     /etc/ufw/user.rules
     /etc/ufw/user6.rules
