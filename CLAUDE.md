@@ -105,7 +105,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   `system-config-printer` ou http://localhost:631 (`install/rede-impressora.sh`).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
 - Login: **`ly-kmsconvt@tty2`** (ly dentro do kmscon: FiraCode Nerd Font Mono 16 px = 12 pt, paleta Catppuccin em
-  `/etc/kmscon/kmscon.conf`; drop-in tira o `--font-engine unifont`). Desenho de fundo `catppuccin.dur`
+  `/etc/kmscon/kmscon.conf`, **teclado `xkb-layout=br`** — sem ele o kmscon usa o americano; drop-in tira o
+  `--font-engine unifont`). Teclado numérico no ly: `xkb-options=numpad:mac` (sempre números; o kmscon não tem Num Lock ligado). Desenho de fundo `catppuccin.dur`
   (`install/gen_ly_dur.py`), relógio grande, pt_BR completo (`lang/ptbr.ini`). `install/ly.sh` (etapas, teste no tty3;
   `kmscon-desfazer` volta ao `ly@tty2`). No kmscon o ly não lê as luzes do teclado: `hide_keyboard_locks` e o erro
   do num lock aparece como "bem-vindo de volta". TTYs: fonte Terminus `ter-v24b`. O ly futuro troca o `config.ini`

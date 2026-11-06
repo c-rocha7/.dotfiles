@@ -119,6 +119,7 @@ atualizar() {
     install -m 644 "$SRC/ly/lang/ptbr.ini" /etc/ly/lang/ptbr.ini
     install -m 644 "$SRC/ly/catppuccin.dur" /etc/ly/catppuccin.dur
     install -d -m 755 /etc/ly/xsessions   # vazia: sem X11 instalado (ver config.ini)
+    [[ -d /etc/kmscon ]] && install -m 644 "$SRC/kmscon/kmscon.conf" /etc/kmscon/kmscon.conf   # teclado, fonte, cores
     echo "Arquivos do ly atualizados (o login do tty2 usa no próximo boot/logout)."
     stop_tests
     if systemctl is-enabled --quiet ly-kmsconvt@tty2 2>/dev/null; then
