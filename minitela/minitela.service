@@ -4,7 +4,7 @@ Description=Minitela do Positivo Vision R15M (relógio, bateria, notificações)
 After=dbus.socket
 
 [Service]
-ExecStart=/usr/bin/python3 -I %h/.dotfiles/minitela/minitela.py daemon --brilho 60
+ExecStart=/usr/bin/python3 -I %h/.dotfiles/minitela/minitela.py daemon
 Restart=on-failure
 RestartSec=5
 

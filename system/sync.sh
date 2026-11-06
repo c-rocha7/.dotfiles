@@ -62,6 +62,7 @@ FILES=(
     /etc/nsswitch.conf
     # Minitela: porta liberada para o usuário logado (install/minitela.sh)
     /etc/udev/rules.d/70-minitela.rules
+    /etc/systemd/system/minitela-apagar.service
     # Firewall (ufw)
     /etc/ufw/user.rules
     /etc/ufw/user6.rules

@@ -21,6 +21,22 @@ A minitela apaga quando a tela é bloqueada ou o notebook suspende, e acende ao 
 sistema → mensagens → lembrete → imagem 1 → imagem 2 → imagem 3 → **apagada** → sistema. Apagada pelo botão, continua apagada até o
 próximo toque (mesmo depois de bloquear/desbloquear) e não mostra notificações.
 
+## Travar numa página e começar apagada
+
+Salvo em `minitela/config.json` (vale a cada login):
+
+| Comando | Efeito |
+|---|---|
+| `minitela.py travar gif1` | a tela fica sempre nessa página (notificações e música não trocam mais); o botão só liga/desliga |
+| `minitela.py destravar` | volta ao normal |
+| `minitela.py inicio apagada` | começa apagada (o botão acende); também `sistema`, `gif1`, etc. |
+| `minitela.py brilho 40` | o brilho também fica salvo |
+
+O serviço do usuário começa no **login**. Para a minitela já começar apagada **desde o boot** (tela do
+ly), o `install/minitela.sh` instala `minitela-apagar.service` (sistema, roda antes do login): se o
+`config.json` tiver `"inicio": "apagada"`, ele manda só o comando de brilho 0. O script fica em
+`/usr/local/lib/minitela/` (cópia de `system/usr/local/lib/minitela/`), e não na pasta pessoal, porque roda como root.
+
 ## Uso
 
 ```bash

@@ -1,0 +1,15 @@
+# Apaga a minitela no boot, antes da tela de login, se minitela/config.json pedir ("inicio": "apagada").
+# Instalado por install/minitela.sh. O serviço do usuário (minitela.service) assume depois do login.
+[Unit]
+Description=Apaga a minitela no boot (Positivo Vision R15M)
+Wants=dev-minitela.device
+After=dev-minitela.device
+Before=ly-kmsconvt@tty2.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I /usr/local/lib/minitela/apagar-no-boot.py
+TimeoutStartSec=15
+
+[Install]
+WantedBy=multi-user.target

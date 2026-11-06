@@ -20,6 +20,10 @@ Uso:
   minitela.py lembrete "Reunião às 15h"     # lembrete "" volta ao automático (música / CPU)
   minitela.py estado
   minitela.py botao                        # botão: sistema → mensagens → lembrete → imagens 1-3 → apagada
+  minitela.py travar gif1                  # prende a tela numa página (o botão só liga/desliga)
+  minitela.py destravar
+  minitela.py inicio apagada               # com o que começa: sistema | ... | gif1-3 | apagada
+  (inicio, travada e brilho ficam salvos em minitela/config.json)
 """
 
 import argparse
@@ -354,15 +358,48 @@ def system_line():
     return "  ".join(items) or " "
 
 
+# ------------------------------------------------------------------ configuração
+
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+CONFIG_DEFAULT = {"inicio": "sistema", "travada": None, "brilho": 60}
+START_CHOICES = list(PAGES) + ["apagada"]
+
+
+def load_config():
+    cfg = dict(CONFIG_DEFAULT)
+    try:
+        cfg.update(json.load(open(CONFIG_PATH)))
+    except (OSError, ValueError):
+        pass
+    if cfg.get("inicio") not in START_CHOICES:
+        cfg["inicio"] = "sistema"
+    if cfg.get("travada") not in PAGES:
+        cfg["travada"] = None
+    cfg["brilho"] = max(0, min(100, int(cfg.get("brilho", 60))))
+    return cfg
+
+
+def save_config(cfg):
+    tmp = CONFIG_PATH + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(cfg, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, CONFIG_PATH)
+
+
 # --------------------------------------------------------------------- daemon
 
 class Daemon:
-    def __init__(self, brightness):
+    def __init__(self, brightness=None):
         self.panel = Panel(on_unsolicited=self.unsolicited)
-        self.brightness = brightness
+        self.cfg = load_config()        # minitela/config.json: inicio, travada, brilho
+        self.brightness = self.cfg["brilho"] if brightness is None else brightness
         self.blanked = False            # tela bloqueada / suspensa
-        self.user_off = False           # apagada pelo botão da minitela (vale até o próximo toque)
-        self.page = PAGES["sistema"]
+        self.locked = self.cfg["travada"]   # página fixa (None = livre)
+        # apagada pelo botão (ou "inicio": "apagada"); vale até o próximo toque
+        self.user_off = self.cfg["inicio"] == "apagada"
+        start = self.locked or (self.cfg["inicio"] if self.cfg["inicio"] in PAGES else "sistema")
+        self.page = PAGES[start]
         self.back_to_system_at = None
         self.next_slow = 0              # wifi/bluetooth (a cada 30 s)
         self.slow = {"wifi": "sem Wi-Fi", "bluetooth": "nenhum"}
@@ -400,7 +437,7 @@ class Daemon:
         if track != self.track:
             self.track = track
             # música nova: mostra por 6 s, só se a minitela estiver na página de sistema
-            if track and self.page == PAGES["sistema"] and not (self.blanked or self.user_off):
+            if track and not self.locked and self.page == PAGES["sistema"] and not (self.blanked or self.user_off):
                 self.page = PAGES["lembrete"]
                 self.back_to_system_at = time.monotonic() + 6
         if track:
@@ -415,6 +452,13 @@ class Daemon:
     BUTTON_CYCLE = ["sistema", "mensagens", "lembrete", "gif1", "gif2", "gif3", "apagada"]
 
     def button(self):
+        if self.locked:
+            # travada: o botão só liga/desliga a página fixa
+            self.user_off = not self.user_off
+            if not self.user_off:
+                self.show_page(PAGES[self.locked])
+            self.panel.set("brilho", self.effective_brightness())
+            return "apagada" if self.user_off else self.locked
         current = "apagada" if self.user_off else next(
             (n for n in self.BUTTON_CYCLE if PAGES.get(n) == self.page), "sistema")
         nxt = self.BUTTON_CYCLE[(self.BUTTON_CYCLE.index(current) + 1) % len(self.BUTTON_CYCLE)]
@@ -440,6 +484,8 @@ class Daemon:
             return
         self.panel.set("notif_de", sender or " ")
         self.panel.set("notif_texto", text or " ")
+        if self.locked:
+            return                      # travada: guarda a mensagem, mas não troca de página
         self.panel.set("notif_gatilho1", 1, force=True)
         self.panel.set("notif_gatilho2", 1, force=True)
         self.show_page(PAGES["mensagens"], hold=10)
@@ -461,6 +507,8 @@ class Daemon:
         if cmd == "brilho":
             self.brightness = max(0, min(100, int(msg["valor"])))
             self.user_off = False
+            self.cfg["brilho"] = self.brightness
+            save_config(self.cfg)
             self.panel.set("brilho", self.effective_brightness())
         elif cmd == "pagina":
             value = msg["valor"]
@@ -470,6 +518,24 @@ class Daemon:
             self.show_page(page)
         elif cmd == "notificar":
             self.notify(msg.get("de", ""), msg.get("texto", ""))
+        elif cmd == "travar":
+            page = msg.get("valor")
+            if page not in PAGES:
+                return {"erro": f"página inválida: {page} ({', '.join(PAGES)})"}
+            self.locked = self.cfg["travada"] = page
+            save_config(self.cfg)
+            self.user_off = False
+            self.show_page(PAGES[page])
+            self.panel.set("brilho", self.effective_brightness())
+        elif cmd == "destravar":
+            self.locked = self.cfg["travada"] = None
+            save_config(self.cfg)
+        elif cmd == "inicio":
+            value = msg.get("valor")
+            if value not in START_CHOICES:
+                return {"erro": f"opção inválida: {value} ({', '.join(START_CHOICES)})"}
+            self.cfg["inicio"] = value
+            save_config(self.cfg)
         elif cmd == "botao":
             return {"ok": True, "agora": self.button()}
         elif cmd == "lembrete":
@@ -482,7 +548,8 @@ class Daemon:
             lido = {"tela_pagina": self.panel.read_num("pagina"), "tela_brilho": self.panel.read_num("brilho"),
                     "tela_lembrete": self.panel.read_str("lembrete")}
         return {"ok": True, "conectada": self.panel.fd is not None, "brilho": self.brightness, **lido,
-                "apagada": self.blanked, "desligada_no_botao": self.user_off, "pagina": self.page, **self.slow}
+                "apagada": self.blanked, "desligada_no_botao": self.user_off, "pagina": self.page,
+                "travada": self.locked, "inicio": self.cfg["inicio"], **self.slow}
 
     # --- laço principal -------------------------------------------------------
 
@@ -643,7 +710,7 @@ def main():
     ap = argparse.ArgumentParser(description="Minitela do Positivo Vision R15M")
     sub = ap.add_subparsers(dest="cmd", required=True)
     d = sub.add_parser("daemon", help="serviço que mantém a tela atualizada")
-    d.add_argument("--brilho", type=int, default=60)
+    d.add_argument("--brilho", type=int, default=None, help="padrão: o salvo em config.json")
     sub.add_parser("brilho").add_argument("valor", type=int)
     sub.add_parser("pagina").add_argument("valor", help=" | ".join(PAGES))
     n = sub.add_parser("notificar")
@@ -652,12 +719,15 @@ def main():
     sub.add_parser("lembrete").add_argument("texto")
     sub.add_parser("estado")
     sub.add_parser("botao", help="o mesmo que o botão da minitela (próxima página / apagar)")
+    sub.add_parser("travar", help="prende a tela numa página").add_argument("valor", help=" | ".join(PAGES))
+    sub.add_parser("destravar", help="volta ao normal (notificações e música trocam a página)")
+    sub.add_parser("inicio", help="com o que a minitela começa").add_argument("valor", help=" | ".join(PAGES) + " | apagada")
     args = ap.parse_args()
 
     if args.cmd == "daemon":
-        sys.exit(Daemon(max(0, min(100, args.brilho))).run())
+        sys.exit(Daemon(None if args.brilho is None else max(0, min(100, args.brilho))).run())
     msg = {"cmd": args.cmd}
-    if args.cmd in ("brilho", "pagina"):
+    if args.cmd in ("brilho", "pagina", "travar", "inicio"):
         msg["valor"] = args.valor
     elif args.cmd == "notificar":
         msg.update(de=args.de, texto=args.texto)

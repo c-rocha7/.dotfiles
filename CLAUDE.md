@@ -96,6 +96,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   playerctl ou CPU/RAM/temperatura), apaga no bloqueio/suspensão. Botão
   `XF86Launch7` = próxima página/apagar. **Só SET_REGISTER**, nunca HANDSHAKE/gravação; sem texto vazio; 0,15 s
   entre comandos; só envia o que mudou. Botão: sistema → mensagens → lembrete → imagens 1-3 → apagada.
+  `minitela/config.json`: `inicio` (página ou `apagada`), `travada` (página fixa; botão só liga/desliga), `brilho`.
   **Imagens/temas** (`minitela/imagens.py`, GRAVA a flash, só a região de texturas): arquivos do `.deb` oficial
   extraídos sem instalar em `~/.local/share/minitela-oficial` (o `.deb` fica em `positivo-minitela/`, **no .gitignore**;
   o pacote abre todos os teclados para qualquer usuário: não instalar). Compilador `.exe` via Wine. Testado: imagem
@@ -142,9 +143,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   `SUPER+Tab` janelas), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
   gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),
   atualizações pendentes na ilha aberta (`Updates.qml`; clique roda o `atualizar`).
-  - Singletons: `pragma Singleton` tem que ser a **primeira linha**; `shell.qml` precisa de
-    `//@ pragma UseQApplication` (menus da bandeja).
-  - Reiniciar a barra: `SUPER+SHIFT+Esc`. Logs: `qs log $(ls -t /run/user/$UID/quickshell/by-id/*/log.qslog | head -1)`.
+  - Detalhes técnicos (singletons, bandeja, logs): `quickshell/CLAUDE.md`.
 - Visual: Catppuccin Mocha, **FiraCode Nerd Font 12** (GTK, Qt, Ghostty), Breeze-Dark, Papirus-Dark, Bibata.
   Ghostty usa `GTK_IM_MODULE=simple` (senão os acentos não funcionam).
 - Wallpaper: `awww` + waypaper (a ilha usa `waypaper --wallpaper`). Imagens em `~/Imagens/Wallpapers`,
@@ -157,8 +156,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - `hmsf` = switch (+ kbuildsycoca6), `nfu` = update do flake, `hmn` = news. `atualizar` = tudo (pacman/AUR,
     flatpak, Nix, mise).
   - **Arquivo novo no flake precisa de `git add`** (o Nix ignora arquivos que o git não acompanha).
-  - Módulos ativos: zen, obsidian, vesktop, qview, tealdeer, devenv, direnv, nil, nixd, nixpkgs-fmt, flatpak
-    (inclui Navicat via `flatpakref` + `sha256`), wrappers btop, fastfetch, mpv, vim, yazi.
+  - Módulos ativos: ver `modules/home-modules.nix` (Navicat é um `flatpakref` com `sha256` em `_flatpak.nix`).
   - GPU para apps do Nix: `non-nixos-gpu-setup` já rodado (`/run/opengl-driver`).
 - **mise**: em `~/.local/bin/mise`, **sem linguagens globais** (só lazygit, lazydocker, usage).
   Use `mise use node@lts` etc. **por projeto** — um Python global quebra utilitários do Arch e pacotes do AUR.
@@ -179,9 +177,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - Branch **`notebook-r15m`** (este notebook) com commits por assunto; `main` = desktop (ainda com Waybar).
 - Plano: no desktop, **unificar numa `main` só** com `hosts/<máquina>/` para o que muda entre as máquinas
   (monitores/workspaces do Hyprland, `system/etc`, caminhos do VS Code), carregado pelo hostname.
-- Pastas: `hypr`, `quickshell`, `ghostty`, `zsh`, `mise`, `nix`, `nix-dotfiles`, `gtk`, `qt`, `rofi`
-  (reserva do launcher), `wlogout` (reserva do menu de energia), `waypaper`, `kitty`, `git`, `vscode`, `gamemode`, `MangoHud`,
-  `install/` (scripts das fases, com README), `docs/` (guias e comandos prontos para reutilizar), `system/` (cópias do `/etc`; atualizar com `sudo bash system/sync.sh`).
+- Pastas não óbvias: `rofi/` e `wlogout/` são reserva (launcher e menu de energia agora são da ilha); `system/` =
+  cópias do `/etc` (atualizar com `sudo bash system/sync.sh`); `positivo-minitela/` = `.deb` oficial, fora do git.
 
 ## 11. Pendências
 
