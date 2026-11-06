@@ -324,9 +324,9 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo(), { description = "Janelas · P
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd([[bash -c "~/.config/hypr/scripts/monitor.sh"]]),
     { description = "Tela · Tela externa: estender → espelhar → só externa → só notebook" })
 hl.bind("XF86Display", hl.dsp.exec_cmd([[bash -c "~/.config/hypr/scripts/monitor.sh"]]))
--- Botão da minitela (tecla XF86Launch7): sistema → mensagens → lembrete → apagada (minitela/minitela.py)
+-- Botão da minitela (tecla XF86Launch7): sistema → mensagens → lembrete → imagens 1-3 → apagada (minitela/minitela.py)
 hl.bind("XF86Launch7", hl.dsp.exec_cmd([[bash -c "python3 -I ~/.dotfiles/minitela/minitela.py botao"]]),
-    { description = "Minitela · Próxima página (sistema → mensagens → lembrete → apagada)" })
+    { description = "Minitela · Próxima página (sistema → mensagens → lembrete → imagens → apagada)" })
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), { description = "Janelas · Tela cheia" })
 
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }), { description = "Janelas · Focar à esquerda" })

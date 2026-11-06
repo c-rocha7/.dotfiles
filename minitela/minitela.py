@@ -17,9 +17,9 @@ Uso:
   minitela.py brilho 60                    # 0-100 (fala com o serviço)
   minitela.py pagina sistema               # mensagens | lembrete | sistema | clima | gif1-3
   minitela.py notificar "Fulano" "oi!"     # mostra na página de mensagens
-  minitela.py lembrete "Reunião às 15h"
+  minitela.py lembrete "Reunião às 15h"     # lembrete "" volta ao automático (música / CPU)
   minitela.py estado
-  minitela.py botao                        # botão da minitela: sistema → mensagens → lembrete → apagada
+  minitela.py botao                        # botão: sistema → mensagens → lembrete → imagens 1-3 → apagada
 """
 
 import argparse
@@ -84,6 +84,7 @@ def frame_str(reg: int, text: str) -> bytes:
 
 RESPONSE = 0x00D0                # resposta do SET_REGISTER (1º byte: 0 leitura num., 1 texto, 2 ack)
 HDR_READ_NUM = 0xC0
+HDR_READ_STR = 0xE0
 GAP = 0.15                       # intervalo mínimo entre comandos: mais rápido que isso corrompe a tela
 
 
@@ -137,15 +138,21 @@ class Panel:
         except OSError as e:
             log(f"não abriu {path}: {e}")
             return False
-        attrs = termios.tcgetattr(fd)
-        attrs[0], attrs[1], attrs[3] = termios.IGNPAR, 0, 0
-        attrs[2] = termios.CS8 | termios.CREAD | termios.CLOCAL
-        attrs[4] = attrs[5] = termios.B115200
-        attrs[6][termios.VMIN] = 0
-        attrs[6][termios.VTIME] = 0
-        termios.tcsetattr(fd, termios.TCSANOW, attrs)
-        time.sleep(1.5)                 # abrir a porta reinicia a tela; ela ignora comandos por ~1 s
-        termios.tcflush(fd, termios.TCIOFLUSH)
+        try:
+            attrs = termios.tcgetattr(fd)
+            attrs[0], attrs[1], attrs[3] = termios.IGNPAR, 0, 0
+            attrs[2] = termios.CS8 | termios.CREAD | termios.CLOCAL
+            attrs[4] = attrs[5] = termios.B115200
+            attrs[6][termios.VMIN] = 0
+            attrs[6][termios.VTIME] = 0
+            termios.tcsetattr(fd, termios.TCSANOW, attrs)
+            time.sleep(1.5)             # abrir a porta reinicia a tela; ela ignora comandos por ~1 s
+            termios.tcflush(fd, termios.TCIOFLUSH)
+        except (termios.error, OSError) as e:
+            # ex.: o USB da tela ainda está reiniciando (volta da suspensão): tenta de novo depois
+            log(f"minitela ainda não respondeu ({e}); tento de novo em 5 s")
+            os.close(fd)
+            return False
         self.fd, self.cache, self.buf = fd, {}, bytearray()
         log(f"minitela conectada em {os.path.realpath(path)}")
         return True
@@ -227,6 +234,15 @@ class Panel:
             for reg, v in todo:
                 self.cache[reg] = v
 
+    def read_str(self, name):
+        reg = REG[name]
+        cap = STR_CAP.get(reg, 32)
+        data = self.transact(_frame(struct.pack(">BHH", HDR_READ_STR, reg, cap)), want=1)
+        if data and len(data) >= 5 and struct.unpack(">H", data[1:3])[0] == reg:
+            size = struct.unpack(">H", data[3:5])[0]
+            return data[5:5 + size].split(b"\x00", 1)[0].decode("utf-8", "replace")
+        return None
+
     def read_num(self, name):
         reg = REG[name]
         data = self.transact(_frame(bytes([HDR_READ_NUM]) + struct.pack(">H", reg)), want=0)
@@ -278,6 +294,66 @@ def bluetooth_name():
     return "nenhum"
 
 
+_cpu_prev = None
+
+
+def cpu_percent():
+    """Uso de CPU desde a leitura anterior (a primeira só estabelece a base)."""
+    global _cpu_prev
+    try:
+        fields = [int(x) for x in open("/proc/stat").readline().split()[1:]]
+    except (OSError, ValueError):
+        return None
+    idle, total = fields[3] + fields[4], sum(fields)
+    prev, _cpu_prev = _cpu_prev, (idle, total)
+    if not prev or total == prev[1]:
+        return None
+    return round(100 * (1 - (idle - prev[0]) / (total - prev[1])))
+
+
+def ram_percent():
+    info = {}
+    try:
+        for line in open("/proc/meminfo"):
+            key, value = line.split(":", 1)
+            info[key] = int(value.split()[0])
+        return round(100 * (1 - info["MemAvailable"] / info["MemTotal"]))
+    except (OSError, KeyError, ValueError):
+        return None
+
+
+def cpu_temp():
+    for hw in glob.glob("/sys/class/hwmon/hwmon*"):
+        try:
+            if open(f"{hw}/name").read().strip() == "k10temp":
+                return round(int(open(f"{hw}/temp1_input").read()) / 1000)
+        except (OSError, ValueError):
+            pass
+    return None
+
+
+def now_playing():
+    """(título, artista) do player tocando agora (MPRIS via playerctl), ou None."""
+    out = run(["playerctl", "metadata", "--format", "{{status}}\t{{title}}\t{{artist}}"], timeout=2)
+    for line in out.splitlines():
+        parts = line.split("\t")
+        if len(parts) == 3 and parts[0] == "Playing" and parts[1].strip():
+            return parts[1].strip(), parts[2].strip()
+    return None
+
+
+def system_line():
+    cpu, ram, temp = cpu_percent(), ram_percent(), cpu_temp()
+    items = []
+    if cpu is not None:
+        items.append(f"CPU {cpu}%")
+    if ram is not None:
+        items.append(f"RAM {ram}%")
+    if temp is not None:
+        items.append(f"{temp}°C")
+    return "  ".join(items) or " "
+
+
 # --------------------------------------------------------------------- daemon
 
 class Daemon:
@@ -290,7 +366,8 @@ class Daemon:
         self.back_to_system_at = None
         self.next_slow = 0              # wifi/bluetooth (a cada 30 s)
         self.slow = {"wifi": "sem Wi-Fi", "bluetooth": "nenhum"}
-        self.reminder = " "
+        self.reminder = None            # lembrete definido pelo usuário (None = automático)
+        self.track = None               # música tocando (para mostrar quando muda)
 
     # --- conteúdo ---------------------------------------------------------
 
@@ -311,15 +388,31 @@ class Daemon:
         p.set("wifi", self.slow["wifi"], force)
         p.set("bluetooth", self.slow["bluetooth"], force)
         p.set("whatsapp_logo", 0, force)
-        p.set("lembrete", self.reminder, force)
+        p.set("lembrete", self.reminder_text(), force)
         p.set("pagina", self.page, force)
         p.set("brilho", self.effective_brightness(), force)
+
+    def reminder_text(self):
+        """Página de lembrete: seu lembrete > música tocando > CPU/RAM/temperatura."""
+        if self.reminder:
+            return self.reminder
+        track = now_playing()
+        if track != self.track:
+            self.track = track
+            # música nova: mostra por 6 s, só se a minitela estiver na página de sistema
+            if track and self.page == PAGES["sistema"] and not (self.blanked or self.user_off):
+                self.page = PAGES["lembrete"]
+                self.back_to_system_at = time.monotonic() + 6
+        if track:
+            title, artist = track
+            return f"Tocando: {title}" + (f" - {artist}" if artist else "")
+        return system_line()
 
     def effective_brightness(self):
         return 0 if (self.blanked or self.user_off) else self.brightness
 
     # Botão da minitela (tecla XF86Launch7, atalho no hypr/hyprland.lua): cada toque avança.
-    BUTTON_CYCLE = ["sistema", "mensagens", "lembrete", "apagada"]
+    BUTTON_CYCLE = ["sistema", "mensagens", "lembrete", "gif1", "gif2", "gif3", "apagada"]
 
     def button(self):
         current = "apagada" if self.user_off else next(
@@ -380,13 +473,14 @@ class Daemon:
         elif cmd == "botao":
             return {"ok": True, "agora": self.button()}
         elif cmd == "lembrete":
-            self.reminder = msg.get("texto") or " "
-            self.panel.set("lembrete", self.reminder)
+            self.reminder = (msg.get("texto") or "").strip() or None   # vazio = volta ao automático
+            self.panel.set("lembrete", self.reminder_text())
         elif cmd != "estado":
             return {"erro": f"comando desconhecido: {cmd}"}
         lido = {}
         if cmd == "estado" and self.panel.fd is not None:
-            lido = {"tela_pagina": self.panel.read_num("pagina"), "tela_brilho": self.panel.read_num("brilho")}
+            lido = {"tela_pagina": self.panel.read_num("pagina"), "tela_brilho": self.panel.read_num("brilho"),
+                    "tela_lembrete": self.panel.read_str("lembrete")}
         return {"ok": True, "conectada": self.panel.fd is not None, "brilho": self.brightness, **lido,
                 "apagada": self.blanked, "desligada_no_botao": self.user_off, "pagina": self.page, **self.slow}
 
@@ -466,7 +560,7 @@ class Daemon:
                         waking = line.strip().endswith("false")
                         self.set_blank(not waking, "suspensão", reconnect=waking)
                         if waking:
-                            next_tick = 0
+                            next_tick = time.monotonic() + 3   # dá tempo do USB da tela voltar
                         last_system = ""
                 elif r == self.panel.fd:
                     self.panel.poll(0)

@@ -1,0 +1,7 @@
+
+# Pacote oficial da minitela (proprietário, 208 MB): só para extrair, nunca versionar
+positivo-minitela/
+
+# Python compilado
+__pycache__/
+*.pyc

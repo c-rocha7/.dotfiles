@@ -92,9 +92,14 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - Busca de arquivos: `plocate` (`locate nome`; não indexa `/.snapshots`, `/nix`, Docker). Exemplos de comandos: `tldr` (Nix).
 - **Minitela** (tela de 1,54" acima do teclado; `minitela/`, ver README): controlador GC9002 por USB serial
   (`0324:0324`, `/dev/minitela`, regra udev `uaccess` em `install/minitela.sh`). Serviço do usuário `minitela.service`
-  (Python, só stdlib): relógio, bateria, Wi-Fi, BT, notificações da ilha, apaga no bloqueio/suspensão. Botão
+  (Python, só stdlib): relógio, bateria, Wi-Fi, BT, notificações da ilha, lembrete automático (música via
+  playerctl ou CPU/RAM/temperatura), apaga no bloqueio/suspensão. Botão
   `XF86Launch7` = próxima página/apagar. **Só SET_REGISTER**, nunca HANDSHAKE/gravação; sem texto vazio; 0,15 s
-  entre comandos; só envia o que mudou. Imagens próprias (gravam a flash) não implementadas.
+  entre comandos; só envia o que mudou. Botão: sistema → mensagens → lembrete → imagens 1-3 → apagada.
+  **Imagens/temas** (`minitela/imagens.py`, GRAVA a flash, só a região de texturas): arquivos do `.deb` oficial
+  extraídos sem instalar em `~/.local/share/minitela-oficial` (o `.deb` fica em `positivo-minitela/`, **no .gitignore**;
+  o pacote abre todos os teclados para qualquer usuário: não instalar). Compilador `.exe` via Wine. Testado: imagem
+  própria gravada e exibida. Tela congelou? Desligar por completo e `imagens.py fabrica`.
 - **Impressão**: CUPS sem driver (IPP Everywhere) + avahi/nss-mdns (`mdns_minimal` no nsswitch); painel
   `system-config-printer` ou http://localhost:631 (`install/rede-impressora.sh`).
 - **faillock** (padrão do Arch): 3 senhas erradas em 15 min bloqueiam a conta por 10 min (sudo e tela de bloqueio).
