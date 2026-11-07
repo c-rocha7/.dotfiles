@@ -473,7 +473,6 @@ class Daemon:
         self.next_slow = 0              # wifi/bluetooth (a cada 30 s)
         self.slow = {"wifi": "sem Wi-Fi", "bluetooth": "nenhum"}
         self.reminder = None            # lembrete definido pelo usuário (None = automático)
-        self.event_alerted = None       # evento da agenda já avisado (10 min antes)
         self.track = None               # música tocando (para mostrar quando muda)
 
     # --- conteúdo ---------------------------------------------------------
@@ -508,15 +507,8 @@ class Daemon:
         if self.reminder:
             return self.reminder
         event = next_event()
-        if event:
-            text, secs = event
-            # 10 min antes: mostra o lembrete por 15 s (uma vez por evento), se estiver na página de sistema
-            if 0 < secs <= 600 and text != self.event_alerted:
-                self.event_alerted = text
-                if not self.locked and self.page == PAGES["sistema"] and not (self.blanked or self.user_off):
-                    self.page = PAGES["lembrete"]
-                    self.back_to_system_at = time.monotonic() + 15
-            return text[:60]
+        if event:                       # o aviso de 10 min chega como notificação (Agenda.qml)
+            return event[0][:60]
         track = now_playing()
         if track != self.track:
             self.track = track
