@@ -55,6 +55,10 @@ REG = {
     "notif_de": 1140, "notif_texto": 1141, "bateria_icone": 1150,
     "whatsapp_logo": 2005, "data_hora": 2006,
     "notif_gatilho1": 2025, "notif_gatilho2": 2026,
+    # página de clima (preenchida com a previsão que o Quickshell salva; ver weather_from_files)
+    "clima1_tipo": 1110, "clima2_tipo": 1115, "clima3_tipo": 1120,
+    "clima2_desc": 1119, "clima3_desc": 1124,
+    "cidade": 2027, "temp_hoje": 2030, "temp_amanha": 2031, "temp_depois": 2032,
 }
 STR_CAP = {1140: 36, 1141: 96, 1090: 100}     # bytes UTF-8; os demais aceitam 32
 PAGES = {"mensagens": 1, "lembrete": 2, "sistema": 3, "clima": 4, "gif1": 5, "gif2": 6, "gif3": 7}
@@ -346,6 +350,45 @@ def now_playing():
     return None
 
 
+# Clima: o Quickshell (Weather.qml) salva as respostas da Open-Meteo e do ipapi aqui.
+WEATHER_FILES = (os.path.join(RUNTIME, "clima-previsao.json"), os.path.join(RUNTIME, "clima-local.json"))
+WEEKDAYS = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"]
+
+
+def weather_type(code, day=True):
+    """Código WMO → ícone da minitela: 0 sol, 1 sol+nuvem, 2 nublado, 3 chuva, 4 noite, 5 noite+nuvem, 6 neve."""
+    if code == 0:
+        return 0 if day else 4
+    if code in (1, 2):
+        return 1 if day else 5
+    if code in (3, 45, 48):
+        return 2
+    if (71 <= code <= 77) or code in (85, 86):
+        return 6
+    return 3                                   # garoa, chuva, pancadas, tempestade
+
+
+def weather_from_files():
+    """Valores da página de clima, ou None se o Quickshell ainda não buscou a previsão."""
+    try:
+        f = json.load(open(WEATHER_FILES[0]))
+        loc = json.load(open(WEATHER_FILES[1]))
+        daily = f["daily"]
+        out = {"cidade": loc.get("city") or " ",
+               "clima1_tipo": weather_type(daily["weather_code"][0], f["current"].get("is_day", 1) == 1)}
+        for i, (tipo, temp) in enumerate([("clima1_tipo", "temp_hoje"), ("clima2_tipo", "temp_amanha"),
+                                          ("clima3_tipo", "temp_depois")]):
+            if i > 0:
+                out[tipo] = weather_type(daily["weather_code"][i])
+            out[temp] = f"{round(daily['temperature_2m_min'][i])}°/{round(daily['temperature_2m_max'][i])}°"
+        for i, desc in ((1, "clima2_desc"), (2, "clima3_desc")):
+            y, m, d = map(int, daily["time"][i].split("-"))
+            out[desc] = WEEKDAYS[time.strptime(f"{y}-{m}-{d}", "%Y-%m-%d").tm_wday]
+        return out
+    except (OSError, ValueError, KeyError, IndexError, TypeError):
+        return None
+
+
 def system_line():
     cpu, ram, temp = cpu_percent(), ram_percent(), cpu_temp()
     items = []
@@ -422,6 +465,10 @@ class Daemon:
         if time.monotonic() >= self.next_slow or force:
             self.slow = {"wifi": wifi_name(), "bluetooth": bluetooth_name()}
             self.next_slow = time.monotonic() + 30
+        if "clima" not in self.slow or force or time.monotonic() >= self.next_slow - 25:
+            self.slow["clima"] = weather_from_files()
+        for name, value in (self.slow.get("clima") or {}).items():
+            p.set(name, value, force)
         p.set("wifi", self.slow["wifi"], force)
         p.set("bluetooth", self.slow["bluetooth"], force)
         p.set("whatsapp_logo", 0, force)
@@ -546,7 +593,9 @@ class Daemon:
         lido = {}
         if cmd == "estado" and self.panel.fd is not None:
             lido = {"tela_pagina": self.panel.read_num("pagina"), "tela_brilho": self.panel.read_num("brilho"),
-                    "tela_lembrete": self.panel.read_str("lembrete")}
+                    "tela_lembrete": self.panel.read_str("lembrete"),
+                    "tela_cidade": self.panel.read_str("cidade"),
+                    "tela_temp_hoje": self.panel.read_str("temp_hoje")}
         return {"ok": True, "conectada": self.panel.fd is not None, "brilho": self.brightness, **lido,
                 "apagada": self.blanked, "desligada_no_botao": self.user_off, "pagina": self.page,
                 "travada": self.locked, "inicio": self.cfg["inicio"], **self.slow}
