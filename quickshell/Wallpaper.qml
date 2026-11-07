@@ -23,6 +23,43 @@ Singleton {
     property var images: []
     property string current: ""
 
+    // Troca automática: 0 = desligada; senão, minutos entre as trocas (aleatório). Salvo em
+    // ~/.local/state/quickshell/.../wallpaper.json (vale depois de reiniciar). As cores do
+    // sistema acompanham (o waypaper roda o matugen).
+    readonly property var autoOptions: [0, 30, 60, 180]
+    readonly property int autoMinutes: settings.autoMinutes
+    function cycleAuto() {
+        const i = autoOptions.indexOf(settings.autoMinutes);
+        settings.autoMinutes = autoOptions[(i + 1) % autoOptions.length];
+        settingsFile.writeAdapter();
+    }
+    function autoLabel() {
+        const m = settings.autoMinutes;
+        return m === 0 ? "desligado" : m < 60 ? `${m} min` : `${m / 60} h`;
+    }
+    FileView {
+        id: settingsFile
+        path: Quickshell.statePath("wallpaper.json")
+        printErrors: false
+        JsonAdapter {
+            id: settings
+            property int autoMinutes: 0
+        }
+    }
+    Timer {
+        running: settings.autoMinutes > 0
+        interval: Math.max(1, settings.autoMinutes) * 60 * 1000
+        repeat: true
+        onTriggered: {
+            if (root.images.length === 0) {
+                root.refresh();
+                randomWhenReady.start();
+            } else {
+                root.random();
+            }
+        }
+    }
+
     function show() {
         Launcher.close();
         PowerMenu.close();

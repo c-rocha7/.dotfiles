@@ -87,6 +87,10 @@ IslandView {
                     spacing: 6
 
                     SmallButton {
+                        text: `\u{f0450}  Trocar sozinho: ${Wallpaper.autoLabel()}`
+                        onClicked: Wallpaper.cycleAuto()
+                    }
+                    SmallButton {
                         text: "  Aleatório (R)"
                         onClicked: Wallpaper.random()
                     }

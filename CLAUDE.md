@@ -109,7 +109,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   `--font-engine unifont`). Teclado numérico no ly: `xkb-options=numpad:mac` (sempre números; o kmscon não tem Num Lock ligado). Desenho de fundo `catppuccin.dur`
   (`install/gen_ly_dur.py`), relógio grande, pt_BR completo (`lang/ptbr.ini`). `install/ly.sh` (etapas, teste no tty3;
   `kmscon-desfazer` volta ao `ly@tty2`). No kmscon o ly não lê as luzes do teclado: `hide_keyboard_locks` e o erro
-  do num lock aparece como "bem-vindo de volta". TTYs: fonte Terminus `ter-v24b`. O ly futuro troca o `config.ini`
+  do num lock aparece como "bem-vindo de volta". O `ç` não funciona no ly: o campo de texto do ly 1.4.1 só aceita ASCII
+  (`getEnabledPrintableAscii`), não é o teclado. TTYs: fonte Terminus `ter-v24b`. O ly futuro troca o `config.ini`
   por `config.lua`: migrar ao atualizar. **Chaveiro: gnome-keyring**, desbloqueado no login pelo PAM do ly (o aviso
   `gkr-pam: unable to locate daemon control file` é normal). VS Code: `password-store` no `~/.vscode/argv.json`;
   Electron do Nix (vesktop, obsidian): `--password-store=gnome-libsecret` via `_electron-keyring.nix`
@@ -145,6 +146,12 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
     `SUPER+SHIFT+Return` sessão de trabalho (`sessao-trabalho.sh`). Launcher: `@projeto` (pastas de `~/Projetos` + `.dotfiles`).
   - Central de controle: página **Docker** (`Docker.qml`; containers, iniciar/parar/reiniciar, logs/shell no Ghostty;
     não liga o serviço sozinho). Visão geral: **digitar busca janelas** (`qs ipc call overview buscar <texto>`).
+  - Central também tem **Sistema** (`Health.qml` + `scripts/saude.sh`: falhas, disco, memória, temperaturas,
+    snapshots, travamentos do coredumpctl) e **GitHub** (`GitHub.qml` + `scripts/github.sh`, usa o login do `gh`;
+    ícone na barra só com pendências). **Agenda**: `Agenda.qml` + `scripts/agenda.py` (Google Calendar pelo link
+    secreto iCal em `~/.config/agenda/ical-url`, **fora do git**; um por linha, `Nome = link`, uma cor por agenda; RRULE/EXDATE; cópia em `~/.cache/agenda`):
+    lista no calendário e lembrete na minitela (evento até 1 h; aviso 10 min antes). Tela de bloqueio no estilo
+    da moldura (prévia sem bloquear: `qs ipc call lock previa`). Wallpaper troca sozinho (botão no `SUPER+W`).
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
     **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).

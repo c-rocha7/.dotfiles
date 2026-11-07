@@ -21,6 +21,7 @@ Singleton {
     property string status: ""   // mensagem para o usuário (ex.: senha incorreta)
     property bool busy: false    // conferindo a senha
     property int failures: 0
+    property bool previewOpen: false   // prévia da tela de bloqueio, sem bloquear (Esc fecha)
     property string pending: ""  // senha aguardando o pedido do PAM (apagada logo depois)
 
     // Emitido quando a senha está errada (a tela faz o campo "tremer").
@@ -115,5 +116,11 @@ Singleton {
         target: "lock"
 
         function lock(): void { root.lock(); }
+        // Mostra como a tela de bloqueio está, sem bloquear: qs ipc call lock previa
+        function previa(): void {
+            wallpaperReader.running = true;
+            root.previewOpen = true;
+        }
+        function fecharPrevia(): void { root.previewOpen = false; }
     }
 }

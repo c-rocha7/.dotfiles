@@ -29,6 +29,12 @@ ShellRoot {
         OverviewWindow {}
     }
 
+    // Prévia da tela de bloqueio (qs ipc call lock previa)
+    Variants {
+        model: Quickshell.screens
+        LockPreview {}
+    }
+
     // Tela de bloqueio (só aparece quando bloqueado: qs ipc call lock lock)
     LockScreen {}
 }

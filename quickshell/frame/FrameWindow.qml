@@ -257,6 +257,15 @@ PanelWindow {
         UpdatesPill {}
         RecordPill {}
         Tray { bar: win }
+        // GitHub: só aparece com notificações ou revisões pendentes
+        Pill {
+            visible: GitHub.pending > 0
+            clickable: true
+            color: hovered ? Theme.surface1 : Theme.base
+            BarText { text: "\u{f02a4}"; color: Theme.blue }
+            BarText { text: GitHub.pending }
+            onClicked: ControlCenter.toggle("github")
+        }
         // Wi-Fi, Bluetooth e volume: só os ícones; os controles ficam na central
         StatusCluster { open: win.sidePanel === "control" }
         BatteryPill {}
@@ -329,23 +338,33 @@ PanelWindow {
             shown: calendarPanel.shown
             padH: 6
             padV: 6
-            onShownChanged: if (!shown) calendar.offset = 0
+            onShownChanged: if (!shown) {
+                calendar.offset = 0;
+                calendar.selectedDate = new Date();     // ao abrir de novo: hoje
+            }
 
             // Calendário à esquerda; clima e mídia à direita
             Row {
                 spacing: 12
 
+                // Calendário (clicar num dia mostra os eventos dele na agenda ao lado)
                 Calendar {
                     id: calendar
-                    anchors.verticalCenter: parent.verticalCenter
                     date: clock.date
                     cell: 38
                     rowHeight: 28
                     dayFont: 13
+                    eventDays: Agenda.days
+                    selectable: true
                 }
                 Column {
                     spacing: 10
                     WeatherCard {}
+                    AgendaCard {
+                        width: 320
+                        now: clock.date
+                        day: calendar.selectedDate
+                    }
                     MediaCard {}
                 }
             }
