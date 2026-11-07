@@ -24,6 +24,7 @@
       "io.missioncenter.MissionCenter"
       "org.ferdium.Ferdium"
       "com.spotify.Client"
+      "org.kde.okular"
 
       # Navicat Premium 18 (repositório próprio do Navicat; o runtime vem do Flathub).
       # Se o Navicat atualizar o .flatpakref, o hash muda: nix-prefetch-url <url>
