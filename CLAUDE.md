@@ -49,7 +49,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 ## 4. Boot (Limine + snapshots)
 
 - Kernel `linux-zen` + `amd-ucode` (microcódigo embutido no initramfs). Hooks do mkinitcpio:
-  `base systemd plymouth autodetect microcode modconf kms keyboard sd-vconsole block filesystems sd-btrfs-overlayfs fsck`.
+  `base systemd plymouth autodetect microcode modconf keyboard sd-vconsole block filesystems sd-btrfs-overlayfs fsck`
+  (**sem `kms`** e zstd `-19 -T0`: `install/initramfs-menor.sh`; o `kms` colocava firmware de todas as GPUs AMD,
+  53,5 MB → ~16 MB, e o Limine confere o hash a cada boot: loader 16,2 s → 5,3 s, boot 28,5 → 17,1 s. O amdgpu
+  carrega do disco; o Plymouth começa no simpledrm. Voltar: `initramfs-menor.sh desfazer`).
 - **`limine-mkinitcpio-hook` + `limine-snapper-sync`** (Chaotic-AUR): config em `/etc/default/limine`;
   kernel/initramfs em `/boot/<machine-id>/linux-zen/`; `limine.conf` **gerado** (não editar à mão).
   - O kernel é gerenciado pelo **`limine-update`** — não use `mkinitcpio -P`.
@@ -81,18 +84,18 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   (Quad9, Cloudflare de reserva, modo `opportunistic`; `resolvectl status`). Firewall `ufw` (SSH só da LAN 192.168.15.0/24;
   mDNS 5353/udp liberado). **`sshd` ativo com senha**
   (pendente: só chave — `install/ssh-somente-chave.sh`). Docker: portas `-p` ignoram o ufw (use `127.0.0.1:`).
-- Energia: **power-profiles-daemon** (troca automática: bateria = Economia, tomada = Equilíbrio, pela ilha).
+- Energia: **power-profiles-daemon** (troca automática: bateria = Economia, tomada = Equilíbrio, pelo Quickshell).
   Bluetooth: `bluez` + `blueman` (applet roda escondido, só para PIN de pareamento).
 - **earlyoom** (`/etc/default/earlyoom`): sem memória, encerra o maior consumidor (prefere abas/Electron/Kdenlive;
-  nunca Hyprland, ilha, áudio). O `systemd-oomd` **não** serve: os apps do Hyprland ficam no cgroup da sessão.
+  nunca Hyprland, Quickshell, áudio). O `systemd-oomd` **não** serve: os apps do Hyprland ficam no cgroup da sessão.
 - `/boot` só para o root (fstab `fmask=0077,dmask=0077`): para ler o `limine.conf` use `sudo`.
 - Manutenção: `btrfs-scrub@-.timer` (mensal), `paccache.timer` (semanal). fstrim não precisa (discard=async).
-- **SSD** (Neo Forza NSP095P3451, 512 GB): `smartd` vigia o `/dev/nvme0` e avisa na ilha
+- **SSD** (Neo Forza NSP095P3451, 512 GB): `smartd` vigia o `/dev/nvme0` e avisa no Quickshell
   (`/etc/smartmontools/smartd-notificar.sh`). Em 05/11: 0% de desgaste, 2,01 TB gravados, 15 desligamentos bruscos.
 - Busca de arquivos: `plocate` (`locate nome`; não indexa `/.snapshots`, `/nix`, Docker). Exemplos de comandos: `tldr` (Nix).
 - **Minitela** (tela de 1,54" acima do teclado; `minitela/`, ver README): controlador GC9002 por USB serial
   (`0324:0324`, `/dev/minitela`, regra udev `uaccess` em `install/minitela.sh`). Serviço do usuário `minitela.service`
-  (Python, só stdlib): relógio, bateria, Wi-Fi, BT, notificações da ilha, lembrete automático (música via
+  (Python, só stdlib): relógio, bateria, Wi-Fi, BT, notificações do Quickshell, lembrete automático (música via
   playerctl ou CPU/RAM/temperatura), apaga no bloqueio/suspensão. Botão
   `XF86Launch7` = próxima página/apagar. **Só SET_REGISTER**, nunca HANDSHAKE/gravação; sem texto vazio; 0,15 s
   entre comandos; só envia o que mudou. Botão: sistema → mensagens → lembrete → imagens 1-3 → apagada.
@@ -125,7 +128,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   Depois de instalar apps pelo Nix: `kbuildsycoca6` (o `hmsf` já faz) para o Dolphin enxergá-los.
 - **Jogos** (ver `gamemode/README.md`; comandos do Steam em `docs/jogos-steam.md`): Steam nativo (multilib), GameMode (usuário no grupo `gamemode`),
   MangoHud, Gamescope (FSR), Proton-GE pelo flatpak ProtonPlus. `vm.max_map_count` já é 1048576 (padrão do Arch).
-  O GameMode **não** troca o governor (fica `powersave`/EPP): o `gamemode/hook.sh` avisa a ilha, que liga o
+  O GameMode **não** troca o governor (fica `powersave`/EPP): o `gamemode/hook.sh` avisa o Quickshell, que liga o
   perfil Desempenho do power-profiles-daemon e volta ao anterior no fim.
 
 ## 7. Desktop: Hyprland 0.57 (config em Lua) + Quickshell
@@ -150,28 +153,30 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
     snapshots, travamentos do coredumpctl) e **GitHub** (`GitHub.qml` + `scripts/github.sh`, usa o login do `gh`;
     ícone na barra só com pendências). **Agenda**: `Agenda.qml` + `scripts/agenda.py` (Google Calendar pelo link
     secreto iCal em `~/.config/agenda/ical-url`, **fora do git**; um por linha, `Nome = link`, uma cor por agenda; RRULE/EXDATE; cópia em `~/.cache/agenda`):
-    lista no calendário e lembrete na minitela (evento até 1 h; aviso 10 min antes). Tela de bloqueio no estilo
+    lista no calendário, notificações 2 h/1 h/30 min/10 min antes (teste: `qs ipc call agenda testar <min>`) e
+    lembrete na minitela (evento até 1 h). Tela de bloqueio no estilo
     da moldura (prévia sem bloquear: `qs ipc call lock previa`). Wallpaper troca sozinho (botão no `SUPER+W`).
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
     **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).
-- **Quickshell, layout "moldura"** (padrão, `Theme.layout`; `"ilha"` = a ilha antiga): barra + borda em volta da
+- **Quickshell, layout "moldura"** (a ilha antiga foi removida; está no histórico do git): barra + borda em volta da
   tela, painéis que brotam da moldura (`quickshell/frame/`, ver README): central de controle (ícones Wi-Fi/BT/volume
   na barra; energia no canto esquerdo; Wi-Fi/BT/áudio
   tipo pavucontrol/brilho/luz noturna/bateria), mídia com capa, clima (IP + Open-Meteo, também na minitela), notificações
-  agrupadas, `/arquivo` no launcher, moldura translúcida com desfoque. Mesmas funções da ilha: notificações
+  agrupadas, `/arquivo` no launcher, moldura translúcida com desfoque. Também: notificações
   (substitui o swaync), launcher (`SUPER+Space`: apps, `:emoji`, `=conta`, `>comando`; `SUPER+V` clipboard;
   `SUPER+SHIFT+Tab` lista de janelas), **visão geral das workspaces** (`SUPER+Tab` ou 3 dedos para cima;
   miniaturas ao vivo, arrastar move a janela), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
   gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),
-  atualizações pendentes na ilha aberta (`Updates.qml`; clique roda o `atualizar`).
+  atualizações pendentes na barra (`Updates.qml`; clique roda o `atualizar`). Sem o `qs` rodando, os atalhos dele
+  iniciam o `qs` de novo (não há mais rofi/wlogout de reserva).
   - Detalhes técnicos (singletons, bandeja, logs): `quickshell/CLAUDE.md`.
 - Visual: **cores a partir do wallpaper** (`matugen/`: a cada troca o waypaper roda `aplicar.sh` pelo `post_command`;
   gera `~/.cache/matugen/` → Quickshell `Theme.qml`, bordas do Hyprland via `hyprctl eval`, fundo do Ghostty via
   `config-file` + SIGUSR2; `aplicar.sh desligar|ligar`). Sem as cores geradas: Catppuccin Mocha.
   **FiraCode Nerd Font 12** (GTK, Qt, Ghostty), Breeze-Dark, Papirus-Dark, Bibata.
   Ghostty usa `GTK_IM_MODULE=simple` (senão os acentos não funcionam).
-- Wallpaper: `awww` + waypaper (a ilha usa `waypaper --wallpaper`). Imagens em `~/Imagens/Wallpapers`,
+- Wallpaper: `awww` + waypaper (o Quickshell usa `waypaper --wallpaper`). Imagens em `~/Imagens/Wallpapers`,
   prints em `~/Imagens/Prints`, gravações em `~/Vídeos/Gravações`.
 
 ## 8. Nix (home-manager) e mise
@@ -202,7 +207,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - Branch **`notebook-r15m`** (este notebook) com commits por assunto; `main` = desktop (ainda com Waybar).
 - Plano: no desktop, **unificar numa `main` só** com `hosts/<máquina>/` para o que muda entre as máquinas
   (monitores/workspaces do Hyprland, `system/etc`, caminhos do VS Code), carregado pelo hostname.
-- Pastas não óbvias: `rofi/` e `wlogout/` são reserva (launcher e menu de energia agora são da ilha); `system/` =
+- Pastas não óbvias: `matugen/` = cores a partir do wallpaper; `system/` =
   cópias do `/etc` (atualizar com `sudo bash system/sync.sh`); `positivo-minitela/` = `.deb` oficial, fora do git.
 
 ## 11. Pendências

@@ -7,7 +7,7 @@ import qs
 Pill {
     visible: Battery.available
     // Na moldura: clique abre a página da bateria na central de controle.
-    clickable: Theme.layout === "moldura"
+    clickable: true
     color: hovered && clickable ? Theme.surface1 : Theme.base
     onClicked: ControlCenter.toggle("battery")
 

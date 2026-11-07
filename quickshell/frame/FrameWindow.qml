@@ -255,7 +255,7 @@ PanelWindow {
             color: Theme.blue
         }
         UpdatesPill {}
-        RecordPill {}
+        RecordPill { stoppable: true }   // clique para a gravação
         Tray { bar: win }
         // GitHub: só aparece com notificações ou revisões pendentes
         Pill {

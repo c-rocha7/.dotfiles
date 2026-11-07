@@ -52,9 +52,7 @@ Singleton {
     readonly property int radius: 10
     readonly property int gap: 5        // espaço entre blocos
 
-    // Layout: "moldura" (barra no topo + borda em volta da tela, cantos de dentro arredondados)
-    // ou "ilha" (a ilha dinâmica sozinha no topo). Trocar e recarregar: SUPER+SHIFT+Esc.
-    readonly property string layout: "moldura"
+    // Moldura (barra no topo + borda em volta da tela, cantos de dentro arredondados)
     readonly property color frame: island      // cor da moldura (a mesma da ilha)
     readonly property int frameBar: 38         // altura da barra de cima
     readonly property int frameBorder: 8       // espessura das bordas laterais e de baixo

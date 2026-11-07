@@ -1,6 +1,6 @@
 pragma Singleton
 
-// Menu de energia que sai da ilha (substitui o wlogout).
+// Menu de energia (painel da moldura).
 // - actions: lista de ações, usada também pelo launcher (buscar "desligar", "bloquear"...)
 //   confirm: true pede um segundo clique/Enter antes de executar
 //

@@ -1,4 +1,4 @@
-# Quickshell (ilha dinâmica) — notas técnicas
+# Quickshell (moldura) — notas técnicas
 
 - Singletons: `pragma Singleton` tem que ser a **primeira linha**; `shell.qml` precisa de
   `//@ pragma UseQApplication` (menus da bandeja).

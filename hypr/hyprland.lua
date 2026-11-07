@@ -33,8 +33,9 @@ hl.monitor({
 
 local terminal    = "ghostty"
 local fileManager = "dolphin"
--- Launcher da ilha (Quickshell); se o qs não estiver rodando, cai no rofi
-local menu        = [[bash -c "qs ipc call launcher toggle || rofi -show drun -disable-history"]]
+-- Launcher do Quickshell; se o qs não estiver rodando, inicia o qs de novo
+local qsOrStart   = [[ || setsid -f qs >/dev/null 2>&1]]
+local menu        = [[bash -c "qs ipc call launcher toggle]] .. qsOrStart .. [["]]
 
 
 -------------------
@@ -428,14 +429,14 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true,
 -- Visão geral das workspaces (miniaturas ao vivo; Quickshell). Também: 3 dedos para cima.
 hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd("qs ipc call overview toggle"),
     { description = "Workspaces · Visão geral (todas as workspaces)" })
--- Trocar de janela (lista de janelas no launcher); sem o qs, cai no rofi
-hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.exec_cmd([[bash -c "qs ipc call launcher windows || rofi -show window"]]),
+-- Trocar de janela (lista de janelas no launcher); sem o qs, inicia o qs
+hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.exec_cmd([[bash -c "qs ipc call launcher windows]] .. qsOrStart .. [["]]),
     { description = "Ilha · Trocar de janela (lista)" })
 
--- Histórico do clipboard no launcher da ilha; se o qs não estiver rodando, cai no rofi
+-- Histórico do clipboard no launcher; se o qs não estiver rodando, inicia o qs
 hl.bind(mainMod .. " + V",
     hl.dsp.exec_cmd(
-        [[bash -c "qs ipc call launcher clipboard || (clipvault list | rofi -dmenu -display-columns 2 | clipvault get | wl-copy)"]]),
+        [[bash -c "qs ipc call launcher clipboard]] .. qsOrStart .. [["]]),
     { description = "Ilha · Histórico do clipboard" })
 hl.bind(mainMod .. " + SHIFT + W",
     hl.dsp.exec_cmd([[bash -c "clipvault clear && notify-send 'Clipvault' 'Histórico limpo!'"]]),
@@ -473,8 +474,8 @@ hl.bind(mainMod .. " + SHIFT + R",
     { description = "Capturas · Gravar tela inteira (de novo para parar)" })
 
 -- wLogout
--- Menu de energia da ilha (Quickshell); se o qs não estiver rodando, cai no wlogout
-hl.bind(mainMod .. " + X", hl.dsp.exec_cmd([[bash -c "qs ipc call power toggle || wlogout --buttons-per-row 4"]]),
+-- Menu de energia do Quickshell; se o qs não estiver rodando, inicia o qs
+hl.bind(mainMod .. " + X", hl.dsp.exec_cmd([[bash -c "qs ipc call power toggle]] .. qsOrStart .. [["]]),
     { description = "Sessão · Menu de energia" })
 
 -- Guia de atalhos na ilha (lê as descrições destes atalhos)
