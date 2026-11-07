@@ -153,8 +153,8 @@ end
 
 hl.config({
     general = {
-        gaps_in          = 1,
-        gaps_out         = 4,
+        gaps_in          = 2,
+        gaps_out         = 2,   -- igual ao gaps_in; canto da moldura (14) - 2 = 12 de arredondamento
 
         border_size      = 2,
 
@@ -171,8 +171,8 @@ hl.config({
     },
 
     decoration = {
-        rounding         = 0,
-        rounding_power   = 1,
+        rounding         = 12,  -- concêntrico com os cantos da moldura (Theme.frameRadius 14 - gaps_out 2)
+        rounding_power   = 2,
 
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
@@ -458,6 +458,15 @@ hl.bind(mainMod .. " + minus", hl.dsp.layout("colresize -0.1"),
 -----------------
 ---- WINDOWS ----
 -----------------
+
+-- Moldura do Quickshell translúcida: desfoca o que está atrás dela (pixels quase transparentes,
+-- como o miolo da moldura, ficam de fora pelo ignore_alpha).
+hl.layer_rule({
+    name         = "moldura-desfoque",
+    match        = { namespace = "^moldura$" },
+    blur         = true,
+    ignore_alpha = 0.3,
+})
 
 local suppressMaximizeRule = hl.window_rule({
     name           = "suppress-maximize-events",

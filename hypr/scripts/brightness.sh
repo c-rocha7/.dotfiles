@@ -4,6 +4,7 @@
 #   brightness.sh up     sobe 5%
 #   brightness.sh down   desce 5%
 #   brightness.sh get    mostra a porcentagem atual (usada pela ilha do Quickshell)
+#   brightness.sh set N  define N% (0–100; controle da central de controle)
 #
 # 0% = o mínimo útil desta tela (abaixo de ~10% do valor do hardware ela não escurece mais)
 # 100% = o máximo. No meio, uma curva suave (expoente 2): passos mais finos no escuro.
@@ -23,7 +24,8 @@ case "$1" in
     get) echo "$pct"; exit 0 ;;
     up) pct=$(( (pct + STEP) / STEP * STEP )) ;;
     down) pct=$(( (pct - 1) / STEP * STEP )) ;;
-    *) echo "uso: $0 up|down|get" >&2; exit 1 ;;
+    set) [[ ${2:-} =~ ^[0-9]+$ ]] || { echo "uso: $0 set 0-100" >&2; exit 1; }; pct=$2 ;;
+    *) echo "uso: $0 up|down|get|set N" >&2; exit 1 ;;
 esac
 (( pct > 100 )) && pct=100
 (( pct < 0 )) && pct=0
