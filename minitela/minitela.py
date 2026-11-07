@@ -352,6 +352,7 @@ def now_playing():
 
 # Clima: o Quickshell (Weather.qml) salva as respostas da Open-Meteo e do ipapi aqui.
 WEATHER_FILES = (os.path.join(RUNTIME, "clima-previsao.json"), os.path.join(RUNTIME, "clima-local.json"))
+FOCUS_FLAG = os.path.join(RUNTIME, "modo-foco")    # criado pelo modo foco do Quickshell (Focus.qml)
 WEEKDAYS = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"]
 
 
@@ -527,8 +528,8 @@ class Daemon:
         self.panel.set("pagina", page)
 
     def notify(self, sender, text):
-        if self.blanked or self.user_off:
-            return
+        if self.blanked or self.user_off or os.path.exists(FOCUS_FLAG):
+            return                      # apagada, desligada pelo botão ou modo foco (Quickshell)
         self.panel.set("notif_de", sender or " ")
         self.panel.set("notif_texto", text or " ")
         if self.locked:

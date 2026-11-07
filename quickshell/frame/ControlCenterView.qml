@@ -1,5 +1,6 @@
 // Central de controle (canto direito da moldura).
-//   Página principal: botões (Wi-Fi, Bluetooth, Não perturbe, Luz noturna, Microfone, Energia),
+//   Página principal: botões (Wi-Fi, Bluetooth, Não perturbe, Luz noturna, Microfone, Energia,
+//   Modo foco, Conta-gotas, Texto da tela),
 //   volume e brilho, bateria e mídia.
 //   Subpáginas (setinha ›): Wi-Fi, Bluetooth (ConnectionsView), Áudio (AudioView), Bateria.
 // A página vem de "page" (ControlCenter.page, ou Wi-Fi/Bluetooth/áudio abertos pelos ícones).
@@ -21,6 +22,12 @@ IslandView {
     property MprisPlayer player
     padH: 8
     padV: 8
+
+    // Ferramentas de tela: fecha a central antes (senão ela aparece no print/na seleção)
+    function runTool(script) {
+        ControlCenter.close();
+        Quickshell.execDetached(["bash", "-c", `sleep 0.35; "$HOME/.dotfiles/hypr/scripts/${script}"`]);
+    }
 
     function go(p) {
         QuickSettings.close();
@@ -124,6 +131,25 @@ IslandView {
                         PowerProfiles.profile = order[(order.indexOf(PowerProfiles.profile) + 1) % order.length];
                     }
                     onDetail: root.go("battery")
+                }
+                CcTile {
+                    icon: "\u{f04fe}"   // alvo
+                    label: "Modo foco"
+                    sublabel: Focus.on ? "Ligado" : "Desligado"
+                    active: Focus.on
+                    onToggled: Focus.toggle()
+                }
+                CcTile {
+                    icon: "\u{f020a}"   // conta-gotas
+                    label: "Conta-gotas"
+                    sublabel: "Copiar uma cor"
+                    onToggled: root.runTool("conta-gotas.sh")
+                }
+                CcTile {
+                    icon: "\u{f113a}"   // OCR
+                    label: "Texto da tela"
+                    sublabel: "Copiar texto"
+                    onToggled: root.runTool("texto-da-tela.sh")
                 }
             }
 

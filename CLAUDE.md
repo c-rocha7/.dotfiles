@@ -139,6 +139,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - **Janelas escondidas** (`scripts/scratchpad.sh`, workspaces especiais): `SUPER+'` terminal (classe
     `dev.scratchpad.terminal`), `SUPER+O` Obsidian, `SUPER+A` Spotify. **Apps na workspace**: 1 Zen, 2 VS Code/Navicat,
     3 livre, 4 Kdenlive/GIMP/darktable/Inkscape, 5 Vesktop/Ferdium. PiP do Zen: flutua fixo no canto inferior direito.
+  - **Ferramentas** (também na central de controle): `SUPER+SHIFT+C` conta-gotas (`conta-gotas.sh`, hyprpicker),
+    `SUPER+SHIFT+T` texto da tela (`texto-da-tela.sh`, tesseract por+eng), `SUPER+SHIFT+F` **modo foco** (`Focus.qml`:
+    Não perturbe + minitela ignora notificações via `$XDG_RUNTIME_DIR/modo-foco` + Vesktop/Ferdium em `special:foco`),
+    `SUPER+SHIFT+Return` sessão de trabalho (`sessao-trabalho.sh`). Launcher: `@projeto` (pastas de `~/Projetos` + `.dotfiles`).
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
     **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).

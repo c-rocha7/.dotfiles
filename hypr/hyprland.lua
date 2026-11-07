@@ -365,6 +365,17 @@ hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"),
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }),
     { description = "Workspaces · Mover janela para o especial" })
 
+-- Ferramentas e rotina (scripts em hypr/scripts)
+local scripts = os.getenv("HOME") .. "/.dotfiles/hypr/scripts/"
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd(scripts .. "conta-gotas.sh"),
+    { description = "Ferramentas · Conta-gotas (copia a cor em hex)" })
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd(scripts .. "texto-da-tela.sh"),
+    { description = "Ferramentas · Copiar texto de uma área da tela (OCR)" })
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.exec_cmd("qs ipc call foco toggle"),
+    { description = "Ferramentas · Modo foco (Não perturbe + esconde o Discord)" })
+hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd(scripts .. "sessao-trabalho.sh"),
+    { description = "Apps · Sessão de trabalho (Zen, VS Code, terminal, Obsidian)" })
+
 -- Janelas escondidas (scripts/scratchpad.sh): aparecem e somem por cima de qualquer workspace
 local scratch = os.getenv("HOME") .. "/.dotfiles/hypr/scripts/scratchpad.sh"
 hl.bind(mainMod .. " + apostrophe",

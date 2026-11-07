@@ -52,6 +52,8 @@ IslandView {
             return commandResults(q.slice(1).trim());
         if (q.startsWith("/"))
             return fileResults(q.slice(1).trim());
+        if (q.startsWith("@"))
+            return projectResults(q.slice(1).trim().toLowerCase());
         return appResults(q.toLowerCase());
     }
 
@@ -62,7 +64,13 @@ IslandView {
     property string fileQuery: ""
     readonly property string home: Quickshell.env("HOME")
 
-    onQueryChanged: if (query.trim().startsWith("/")) fileTimer.restart()
+    onQueryChanged: {
+        const q = query.trim();
+        if (q.startsWith("/"))
+            fileTimer.restart();
+        else if (q.startsWith("@") && !projectScan.running && projects.length === 0)
+            projectScan.running = true;
+    }
 
     Timer {
         id: fileTimer
@@ -107,6 +115,47 @@ IslandView {
                 run: shift => Quickshell.execDetached(["xdg-open", shift ? dir : path])
             };
         });
+    }
+
+    // ---------- Projetos: "@nome" ----------
+    // Pastas de ~/Projetos (e repositórios git um nível abaixo, para quem agrupa) + ~/.dotfiles,
+    // as mexidas por último primeiro. Enter: VS Code. Shift+Enter: terminal na pasta (o mise
+    // ativa as versões do projeto sozinho ao entrar).
+    property var projects: []
+
+    Connections {
+        target: Launcher
+        function onOpenChanged() {
+            if (Launcher.open) root.projects = [];      // relê a cada vez que o launcher abre
+        }
+    }
+    Process {
+        id: projectScan
+        command: ["bash", "-c", `P="$HOME/Projetos"
+            { [ -d "$P" ] && find "$P" -mindepth 1 -maxdepth 1 -type d -not -name '.*'
+              [ -d "$P" ] && find "$P" -mindepth 3 -maxdepth 3 -type d -name .git -printf '%h\\n'
+              echo "$HOME/.dotfiles"; } | sort -u |
+            while IFS= read -r d; do printf '%s\\t%s\\n' "$(stat -c %Y "$d")" "$d"; done | sort -rn | cut -f2-`]
+        stdout: StdioCollector {
+            onStreamFinished: root.projects = text.split("\n").filter(l => l !== "")
+        }
+    }
+
+    function projectResults(q) {
+        const list = projects
+            .map(dir => ({ dir: dir, name: dir.slice(dir.lastIndexOf("/") + 1) }))
+            .map(pr => ({ pr: pr, sc: q === "" ? 1 : score(q, pr.name, pr.dir) }))
+            .filter(x => x.sc > 0)
+            .sort((a, b) => b.sc - a.sc)
+            .map(x => x.pr);
+        if (list.length === 0)
+            return [{ name: projectScan.running ? "Procurando…" : "Nenhum projeto", desc: "Os projetos ficam em ~/Projetos", glyph: "\uf07b", run: () => {} }];
+        return list.map(pr => ({
+            name: pr.name,
+            desc: (pr.dir.startsWith(root.home) ? "~" + pr.dir.slice(root.home.length) : pr.dir) + "  ·  Enter: VS Code  ·  Shift+Enter: terminal",
+            glyph: "\uf07b",
+            run: shift => Quickshell.execDetached(shift ? ["ghostty", `--working-directory=${pr.dir}`] : ["code", pr.dir])
+        }));
     }
 
     function close() {
@@ -305,7 +354,7 @@ IslandView {
                         visible: input.text === ""
                         anchors.verticalCenter: parent.verticalCenter
                         text: ({ clipboard: "Buscar no histórico…", windows: "Buscar janelas…" })[Launcher.mode]
-                              ?? "Buscar apps  ·  =conta  ·  >comando  ·  :emoji  ·  /arquivo"
+                              ?? "Buscar apps  ·  =conta  ·  >comando  ·  :emoji  ·  /arquivo  ·  @projeto"
                         color: Theme.overlay
                         font.pixelSize: 16
                         font.weight: Font.Normal

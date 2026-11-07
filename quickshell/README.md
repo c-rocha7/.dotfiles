@@ -225,6 +225,8 @@ volta para a ilha dinâmica.
 | `frame/StatusCluster.qml` | Botão da central na barra: só os ícones de Wi-Fi, Bluetooth e volume (clique abre a central; rolagem = volume; meio = mudo) |
 | `CalendarPanel.qml` | Painel do calendário (duas colunas: calendário · clima + mídia); `qs ipc call calendar toggle` |
 | `Overview.qml` + `frame/OverviewWindow.qml` | Visão geral das workspaces (`SUPER+Tab`, 3 dedos para cima): cards com wallpaper e miniaturas ao vivo (`ScreencopyView` da janela do Hyprland). Clique vai à janela/workspace, arrastar move a janela, clique do meio fecha, 1-5/Esc. As capturas só ligam com tamanho válido (tamanho negativo faz o Hyprland recusar). `qs ipc call overview toggle` |
+| `Focus.qml` | Modo foco: Não perturbe (volta ao estado anterior), arquivo `$XDG_RUNTIME_DIR/modo-foco` para a minitela, Vesktop/Ferdium para `special:foco` (voltam para a 5). `qs ipc call foco toggle` |
+| `bar/LauncherView.qml` (`@`) | Projetos: pastas de `~/Projetos` (+ repositórios git um nível abaixo) e `~/.dotfiles`; Enter VS Code, Shift+Enter terminal na pasta |
 | `frame/MediaCard.qml` | Mídia no calendário: capa, progresso arrastável, anterior/tocar/próximo, ⇄ troca de player (a posição do MPRIS é pedida a cada 1 s) |
 | `frame/VerticalLevel.qml` | Aviso vertical de volume/brilho na borda direita |
 | `frame/FrameWorkspaces.qml` | Workspaces com os ícones dos apps (até 3) |
