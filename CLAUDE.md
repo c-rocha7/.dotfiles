@@ -148,7 +148,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   tipo pavucontrol/brilho/luz noturna/bateria), mídia com capa, clima (IP + Open-Meteo, também na minitela), notificações
   agrupadas, `/arquivo` no launcher, moldura translúcida com desfoque. Mesmas funções da ilha: notificações
   (substitui o swaync), launcher (`SUPER+Space`: apps, `:emoji`, `=conta`, `>comando`; `SUPER+V` clipboard;
-  `SUPER+Tab` janelas), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
+  `SUPER+SHIFT+Tab` lista de janelas), **visão geral das workspaces** (`SUPER+Tab` ou 3 dedos para cima;
+  miniaturas ao vivo, arrastar move a janela), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
   gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),
   atualizações pendentes na ilha aberta (`Updates.qml`; clique roda o `atualizar`).
   - Detalhes técnicos (singletons, bandeja, logs): `quickshell/CLAUDE.md`.

@@ -38,6 +38,11 @@ Singleton {
         open = false;
     }
 
+    // Só lê o wallpaper atual (usado também pela visão geral das workspaces)
+    function readCurrent() {
+        currentReader.running = true;
+    }
+
     function refresh() {
         currentReader.running = true;
         if (!scanner.running) {

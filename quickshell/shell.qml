@@ -23,6 +23,12 @@ ShellRoot {
         Bar {}
     }
 
+    // Visão geral das workspaces (SUPER+Tab / 3 dedos para cima), nos dois layouts
+    Variants {
+        model: Quickshell.screens
+        OverviewWindow {}
+    }
+
     // Tela de bloqueio (só aparece quando bloqueado: qs ipc call lock lock)
     LockScreen {}
 }

@@ -297,6 +297,18 @@ hl.gesture({
     action = "workspace"
 })
 
+-- 3 dedos para cima: visão geral das workspaces; para baixo: fecha
+hl.gesture({
+    fingers = 3,
+    direction = "up",
+    action = function() hl.exec_cmd("qs ipc call overview open") end,
+})
+hl.gesture({
+    fingers = 3,
+    direction = "down",
+    action = function() hl.exec_cmd("qs ipc call overview close") end,
+})
+
 hl.device({
     name          = "lxddz-2.4g-8k-hs-receiver--1",
     sensitivity   = 0,
@@ -399,9 +411,12 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tru
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true, description = "Mídia · Faixa anterior" })
 
 -- Clipvault
--- Trocar de janela (lista de janelas no launcher da ilha); sem o qs, cai no rofi
-hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd([[bash -c "qs ipc call launcher windows || rofi -show window"]]),
-    { description = "Ilha · Trocar de janela" })
+-- Visão geral das workspaces (miniaturas ao vivo; Quickshell). Também: 3 dedos para cima.
+hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd("qs ipc call overview toggle"),
+    { description = "Workspaces · Visão geral (todas as workspaces)" })
+-- Trocar de janela (lista de janelas no launcher); sem o qs, cai no rofi
+hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.exec_cmd([[bash -c "qs ipc call launcher windows || rofi -show window"]]),
+    { description = "Ilha · Trocar de janela (lista)" })
 
 -- Histórico do clipboard no launcher da ilha; se o qs não estiver rodando, cai no rofi
 hl.bind(mainMod .. " + V",
@@ -476,6 +491,13 @@ hl.layer_rule({
     match        = { namespace = "^moldura$" },
     blur         = true,
     ignore_alpha = 0.3,
+})
+
+-- Visão geral das workspaces: desfoca o que está atrás
+hl.layer_rule({
+    name  = "overview-desfoque",
+    match = { namespace = "^overview$" },
+    blur  = true,
 })
 
 local suppressMaximizeRule = hl.window_rule({
