@@ -45,6 +45,8 @@ IslandView {
     }
     onShownChanged: if (shown) Brightness.refresh()
     Binding { target: Docker; property: "watching"; value: root.shown }
+    Binding { target: Health; property: "watching"; value: root.shown }
+    Binding { target: GitHub; property: "watching"; value: root.shown }
 
     readonly property var profileNames: ({
             [PowerProfile.PowerSaver]: "Economia",
@@ -66,7 +68,7 @@ IslandView {
             ThemedText {
                 anchors.verticalCenter: parent.verticalCenter
                 font.bold: true
-                text: ({ wifi: "Wi-Fi", bluetooth: "Bluetooth", audio: "Áudio", battery: "Bateria", docker: "Docker" })[root.page] ?? ""
+                text: ({ wifi: "Wi-Fi", bluetooth: "Bluetooth", audio: "Áudio", battery: "Bateria", docker: "Docker", health: "Sistema", github: "GitHub" })[root.page] ?? ""
             }
         }
 
@@ -202,6 +204,84 @@ IslandView {
                 }
             }
 
+            // Sistema (clique: saúde do sistema)
+            Rectangle {
+                width: 352
+                height: 34
+                radius: 10
+                color: sysMouse.containsMouse ? Theme.surface1 : Theme.base
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    spacing: 8
+                    BarText {
+                        text: "\u{f04c5}"
+                        color: Health.alerts.length ? Theme.red : Health.loaded ? Theme.green : Theme.text
+                    }
+                    BarText { text: "Sistema" }
+                    ThemedText {
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: 12
+                        color: Health.alerts.length ? Theme.red : Theme.subtext
+                        text: Health.summary
+                    }
+                }
+                BarText {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    text: ""
+                    font.pixelSize: 10
+                    color: Theme.subtext
+                }
+                MouseArea {
+                    id: sysMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.go("health")
+                }
+            }
+
+            // GitHub (clique: notificações e PRs)
+            Rectangle {
+                width: 352
+                height: 34
+                radius: 10
+                color: ghMouse.containsMouse ? Theme.surface1 : Theme.base
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    spacing: 8
+                    BarText { text: "\u{f02a4}"; color: GitHub.pending > 0 ? Theme.blue : Theme.text }
+                    BarText { text: "GitHub" }
+                    ThemedText {
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: 12
+                        color: Theme.subtext
+                        text: !GitHub.data ? "" : !GitHub.ok ? "não configurado"
+                            : `${GitHub.notifCount} notificaç${GitHub.notifCount === 1 ? "ão" : "ões"} · ${GitHub.reviewCount} revis${GitHub.reviewCount === 1 ? "ão" : "ões"}`
+                    }
+                }
+                BarText {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    text: ""
+                    font.pixelSize: 10
+                    color: Theme.subtext
+                }
+                MouseArea {
+                    id: ghMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.go("github")
+                }
+            }
+
             // Docker (clique: containers)
             Rectangle {
                 width: 352
@@ -274,6 +354,14 @@ IslandView {
                 id: audio
                 shown: root.shown && root.page === "audio"
             }
+        }
+        HealthView {
+            visible: root.page === "health"
+            height: visible ? implicitHeight : 0
+        }
+        GitHubView {
+            visible: root.page === "github"
+            height: visible ? implicitHeight : 0
         }
         DockerView {
             visible: root.page === "docker"
