@@ -353,6 +353,16 @@ hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"),
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }),
     { description = "Workspaces · Mover janela para o especial" })
 
+-- Janelas escondidas (scripts/scratchpad.sh): aparecem e somem por cima de qualquer workspace
+local scratch = os.getenv("HOME") .. "/.dotfiles/hypr/scripts/scratchpad.sh"
+hl.bind(mainMod .. " + apostrophe",
+    hl.dsp.exec_cmd(scratch .. " terminal '^dev\\.scratchpad\\.terminal$' ghostty --class=dev.scratchpad.terminal"),
+    { description = "Apps · Terminal suspenso (mostrar/esconder)" })
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd(scratch .. " notas '^(obsidian|md\\.obsidian\\.Obsidian)$' obsidian"),
+    { description = "Apps · Obsidian suspenso (mostrar/esconder)" })
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(scratch .. " musica '^(spotify|Spotify)$' flatpak run com.spotify.Client"),
+    { description = "Apps · Spotify suspenso (mostrar/esconder)" })
+
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }),
     { description = "Workspaces · Próximo (rolar o mouse)" })
 hl.bind(mainMod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }),
@@ -518,6 +528,43 @@ hl.window_rule({
     size = "1280 720"
 })
 
+
+-- Janelas escondidas: cada app na sua workspace especial, flutuando no meio da tela
+for _, sp in ipairs({
+    { "terminal", "^dev\\.scratchpad\\.terminal$", "1400 800" },
+    { "notas",    "^(obsidian|md\\.obsidian\\.Obsidian)$", "1500 880" },
+    { "musica",   "^(spotify|Spotify)$", "1400 860" },
+}) do
+    hl.window_rule({
+        name      = "scratchpad-" .. sp[1],
+        match     = { class = sp[2] },
+        workspace = "special:" .. sp[1],
+        float     = true,
+        size      = sp[3],
+        center    = true,
+    })
+end
+
+-- Cada app no seu lugar: 1 navegador · 2 código · 3 livre · 4 criação · 5 conversa
+for _, r in ipairs({
+    { "1", { class = "^zen-beta$", title = "negative:^Picture-in-Picture$" } },
+    { "2", { class = "^(com\\.microsoft\\.VSCode|code|Code|com\\.navicat\\..*|navicat.*)$" } },
+    { "4", { class = "^(org\\.kde\\.kdenlive|gimp.*|Gimp.*|darktable|org\\.inkscape\\.Inkscape)$" } },
+    { "5", { class = "^(vesktop|Vesktop|Ferdium|ferdium|org\\.ferdium\\.Ferdium)$" } },
+}) do
+    hl.window_rule({ name = "app-na-workspace-" .. r[1], match = r[2], workspace = r[1] })
+end
+
+-- Picture-in-picture do Zen: flutua fixo no canto de baixo à direita, em todas as workspaces
+hl.window_rule({
+    name              = "zen-pip",
+    match             = { class = "^zen-beta$", title = "^Picture-in-Picture$" },
+    float             = true,
+    pin               = true,
+    keep_aspect_ratio = true,
+    size              = "480 270",
+    move              = "monitor_w-498 monitor_h-288",
+})
 
 --------------------
 ---- WORKSPACES ----

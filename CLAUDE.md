@@ -136,6 +136,9 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
     espelhar → só externa → só notebook (`scripts/monitor.sh`, aplica com `hyprctl eval 'hl.monitor{...}'`).
   - Tecla principal **SUPER**. Todo atalho tem `description = "Categoria · O que faz"` (aparece no guia `SUPER+/`).
   - `hypr/scripts/`: `brightness.sh` (0% = mínimo útil da tela, passos de 5%), `screenshot.sh`, `record.sh`.
+  - **Janelas escondidas** (`scripts/scratchpad.sh`, workspaces especiais): `SUPER+'` terminal (classe
+    `dev.scratchpad.terminal`), `SUPER+O` Obsidian, `SUPER+A` Spotify. **Apps na workspace**: 1 Zen, 2 VS Code/Navicat,
+    3 livre, 4 Kdenlive/GIMP/darktable/Inkscape, 5 Vesktop/Ferdium. PiP do Zen: flutua fixo no canto inferior direito.
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
     **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).
