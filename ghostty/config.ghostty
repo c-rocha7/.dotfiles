@@ -8,3 +8,6 @@ theme = Catppuccin Mocha
 # Fonte: a mesma dos apps GTK/Qt (FiraCode Nerd Font, tamanho 12, padrão do sistema)
 font-family = FiraCode Nerd Font
 font-size = 12
+
+# Fundo/texto com as cores do wallpaper (matugen/aplicar.sh). O "?" ignora se o arquivo não existir.
+config-file = ?/home/7aauac/.cache/matugen/ghostty-cores

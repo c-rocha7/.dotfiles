@@ -11,6 +11,7 @@ Singleton {
     id: root
 
     property bool open: false
+    property string query: ""            // busca de janelas (digitar com a visão geral aberta)
 
     function toggle() { open = !open; }
     function close() { open = false; }
@@ -21,5 +22,10 @@ Singleton {
         function toggle(): void { root.toggle(); }
         function open(): void { root.open = true; }
         function close(): void { root.close(); }
+        // Abre já buscando: qs ipc call overview buscar zen
+        function buscar(texto: string): void {
+            root.open = true;
+            root.query = texto;
+        }
     }
 }

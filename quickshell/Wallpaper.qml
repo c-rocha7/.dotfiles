@@ -54,6 +54,7 @@ Singleton {
     function apply(path) {
         current = path;
         Quickshell.execDetached(["waypaper", "--wallpaper", path]);
+        // As cores do sistema seguem o wallpaper: o waypaper roda o matugen/aplicar.sh (post_command)
     }
 
     function random() {

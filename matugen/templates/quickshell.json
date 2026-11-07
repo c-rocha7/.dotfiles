@@ -1,0 +1,14 @@
+{
+    "island": "{{colors.surface_container_lowest.default.hex}}",
+    "base": "{{colors.surface_container.default.hex}}",
+    "surface0": "{{colors.surface_container_high.default.hex}}",
+    "surface1": "{{colors.surface_container_highest.default.hex}}",
+    "outline": "{{colors.outline_variant.default.hex}}",
+    "overlay": "{{colors.outline.default.hex}}",
+    "subtext": "{{colors.on_surface_variant.default.hex}}",
+    "text": "{{colors.on_surface.default.hex}}",
+    "blue": "{{colors.primary.default.hex}}",
+    "red": "{{colors.error.default.hex}}",
+    "green": "{{colors.green.default.hex}}",
+    "yellow": "{{colors.yellow.default.hex}}"
+}

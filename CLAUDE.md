@@ -143,6 +143,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
     `SUPER+SHIFT+T` texto da tela (`texto-da-tela.sh`, tesseract por+eng), `SUPER+SHIFT+F` **modo foco** (`Focus.qml`:
     Não perturbe + minitela ignora notificações via `$XDG_RUNTIME_DIR/modo-foco` + Vesktop/Ferdium em `special:foco`),
     `SUPER+SHIFT+Return` sessão de trabalho (`sessao-trabalho.sh`). Launcher: `@projeto` (pastas de `~/Projetos` + `.dotfiles`).
+  - Central de controle: página **Docker** (`Docker.qml`; containers, iniciar/parar/reiniciar, logs/shell no Ghostty;
+    não liga o serviço sozinho). Visão geral: **digitar busca janelas** (`qs ipc call overview buscar <texto>`).
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
     **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).
@@ -157,7 +159,10 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),
   atualizações pendentes na ilha aberta (`Updates.qml`; clique roda o `atualizar`).
   - Detalhes técnicos (singletons, bandeja, logs): `quickshell/CLAUDE.md`.
-- Visual: Catppuccin Mocha, **FiraCode Nerd Font 12** (GTK, Qt, Ghostty), Breeze-Dark, Papirus-Dark, Bibata.
+- Visual: **cores a partir do wallpaper** (`matugen/`: a cada troca o waypaper roda `aplicar.sh` pelo `post_command`;
+  gera `~/.cache/matugen/` → Quickshell `Theme.qml`, bordas do Hyprland via `hyprctl eval`, fundo do Ghostty via
+  `config-file` + SIGUSR2; `aplicar.sh desligar|ligar`). Sem as cores geradas: Catppuccin Mocha.
+  **FiraCode Nerd Font 12** (GTK, Qt, Ghostty), Breeze-Dark, Papirus-Dark, Bibata.
   Ghostty usa `GTK_IM_MODULE=simple` (senão os acentos não funcionam).
 - Wallpaper: `awww` + waypaper (a ilha usa `waypaper --wallpaper`). Imagens em `~/Imagens/Wallpapers`,
   prints em `~/Imagens/Prints`, gravações em `~/Vídeos/Gravações`.

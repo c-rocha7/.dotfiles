@@ -44,6 +44,7 @@ IslandView {
         objects: [Pipewire.defaultAudioSink, root.source]
     }
     onShownChanged: if (shown) Brightness.refresh()
+    Binding { target: Docker; property: "watching"; value: root.shown }
 
     readonly property var profileNames: ({
             [PowerProfile.PowerSaver]: "Economia",
@@ -65,7 +66,7 @@ IslandView {
             ThemedText {
                 anchors.verticalCenter: parent.verticalCenter
                 font.bold: true
-                text: ({ wifi: "Wi-Fi", bluetooth: "Bluetooth", audio: "Áudio", battery: "Bateria" })[root.page] ?? ""
+                text: ({ wifi: "Wi-Fi", bluetooth: "Bluetooth", audio: "Áudio", battery: "Bateria", docker: "Docker" })[root.page] ?? ""
             }
         }
 
@@ -201,6 +202,45 @@ IslandView {
                 }
             }
 
+            // Docker (clique: containers)
+            Rectangle {
+                width: 352
+                height: 34
+                radius: 10
+                color: dockMouse.containsMouse ? Theme.surface1 : Theme.base
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    spacing: 8
+                    BarText { text: "\u{f0868}"; color: Docker.runningCount > 0 ? Theme.blue : Theme.text }
+                    BarText { text: "Docker" }
+                    ThemedText {
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: 12
+                        color: Theme.subtext
+                        text: !Docker.loaded ? "" : !Docker.daemon ? "parado"
+                            : Docker.containers.length === 0 ? "sem containers"
+                            : `${Docker.runningCount} rodando de ${Docker.containers.length}`
+                    }
+                }
+                BarText {
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    text: ""
+                    font.pixelSize: 10
+                    color: Theme.subtext
+                }
+                MouseArea {
+                    id: dockMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.go("docker")
+                }
+            }
+
             // Mídia
             Rectangle {
                 visible: root.player !== null
@@ -234,6 +274,10 @@ IslandView {
                 id: audio
                 shown: root.shown && root.page === "audio"
             }
+        }
+        DockerView {
+            visible: root.page === "docker"
+            height: visible ? implicitHeight : 0
         }
         BatteryView {
             visible: root.page === "battery"

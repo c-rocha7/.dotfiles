@@ -1,0 +1,7 @@
+# Gerado pelo matugen (~/.dotfiles/matugen): fundo/texto/cursor com as cores do wallpaper.
+# As 16 cores do terminal continuam as do Catppuccin (o código fica legível).
+background = {{colors.surface.default.hex_stripped}}
+foreground = {{colors.on_surface.default.hex_stripped}}
+cursor-color = {{colors.primary.default.hex_stripped}}
+selection-background = {{colors.primary_container.default.hex_stripped}}
+selection-foreground = {{colors.on_primary_container.default.hex_stripped}}

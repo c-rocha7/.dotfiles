@@ -1,0 +1,19 @@
+# Cores a partir do wallpaper (matugen, Material You). Usado por aplicar.sh com -c (sem link em ~/.config).
+# Saídas em ~/.cache/matugen/ (não versionadas): Quickshell (Theme.qml), bordas do Hyprland, Ghostty.
+
+[config.custom_colors]
+# Cores com significado fixo (ok/aviso), puxadas para o tom do wallpaper
+green = { color = "#a6e3a1", blend = true }
+yellow = { color = "#f9e2af", blend = true }
+
+[templates.quickshell]
+input_path = "~/.dotfiles/matugen/templates/quickshell.json"
+output_path = "~/.cache/matugen/quickshell.json"
+
+[templates.hyprland]
+input_path = "~/.dotfiles/matugen/templates/hypr-cores.lua"
+output_path = "~/.cache/matugen/hypr-cores.lua"
+
+[templates.ghostty]
+input_path = "~/.dotfiles/matugen/templates/ghostty-cores"
+output_path = "~/.cache/matugen/ghostty-cores"

@@ -4,6 +4,7 @@
 //   Arrastar uma janela ........ move para outra workspace (sem trocar de tela)
 //   Clique do meio na janela ... fecha a janela
 //   Esc / clique fora / 1-5 .... fecha / vai para a workspace N
+//   Digitar .................... busca janelas (título ou app); setas/Tab escolhem, Enter vai
 // Uma janela por monitor (mostra as workspaces daquele monitor). Aberta por Overview.open.
 
 import QtQuick
@@ -41,6 +42,22 @@ PanelWindow {
                                            (height - 200) / Math.ceil(workspaces.length / columns) * monW / monH - 40))
     readonly property real cardH: cardW * monH / monW
     readonly property real s: cardW / monW      // escala tela → card
+
+    // Busca: digitar filtra as janelas; "sel" é a escolhida entre as que combinam
+    readonly property string query: Overview.query
+    property int sel: 0
+    readonly property var matches: {
+        const q = query.trim().toLowerCase();
+        if (q === "")
+            return [];
+        return Hyprland.toplevels.values
+            .filter(t => workspaces.includes(t.workspace?.id) && t.lastIpcObject?.at)
+            .filter(t => [t.lastIpcObject.title, t.lastIpcObject.class, t.wayland?.appId]
+                .some(x => (x || "").toLowerCase().includes(q)))
+            .sort((a, b) => a.workspace.id - b.workspace.id);
+    }
+    readonly property var selected: matches.length ? matches[Math.min(sel, matches.length - 1)] : null
+    onQueryChanged: sel = 0
 
     // Arraste em andamento
     property var dragging: null                 // HyprlandToplevel
@@ -86,6 +103,7 @@ PanelWindow {
                 Hyprland.refreshWorkspaces();
                 Hyprland.refreshMonitors();
                 Wallpaper.readCurrent();
+                Overview.query = "";
                 content.forceActiveFocus();
             } else {
                 win.dragging = null;
@@ -106,13 +124,27 @@ PanelWindow {
         Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
         Keys.onPressed: event => {
+            const n = win.matches.length;
             if (event.key === Qt.Key_Escape) {
-                Overview.close();
-            } else if (event.key >= Qt.Key_1 && event.key <= Qt.Key_9) {
-                win.goWorkspace(event.key - Qt.Key_0);
+                if (win.query !== "") Overview.query = "";
+                else Overview.close();
             } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                Overview.close();
+                if (win.selected) win.goWindow(win.selected);
+                else Overview.close();
+            } else if (event.key === Qt.Key_Backspace) {
+                Overview.query = win.query.slice(0, -1);
+            } else if (n && (event.key === Qt.Key_Right || event.key === Qt.Key_Down || event.key === Qt.Key_Tab)) {
+                win.sel = (Math.min(win.sel, n - 1) + 1) % n;
+            } else if (n && (event.key === Qt.Key_Left || event.key === Qt.Key_Up || event.key === Qt.Key_Backtab)) {
+                win.sel = (Math.min(win.sel, n - 1) - 1 + n) % n;
+            } else if (win.query === "" && event.key >= Qt.Key_1 && event.key <= Qt.Key_9) {
+                win.goWorkspace(event.key - Qt.Key_0);
+            } else if (event.text.length === 1 && event.text >= " " && !(event.modifiers & Qt.ControlModifier)) {
+                Overview.query += event.text;
+            } else {
+                return;
             }
+            event.accepted = true;
         }
 
         // Fundo escurecido (o Hyprland desfoca por trás: layer_rule "overview")
@@ -201,19 +233,23 @@ PanelWindow {
                                         y: (ipc.at[1] - win.monY) * win.s
                                         width: ipc.size[0] * win.s
                                         height: ipc.size[1] * win.s
-                                        opacity: win.dragging === modelData ? 0.3 : 1
+                                        readonly property bool dimmed: win.query !== "" && !win.matches.includes(modelData)
+                                        readonly property bool chosen: win.selected === modelData
+                                        opacity: win.dragging === modelData ? 0.3 : dimmed ? 0.2 : 1
+                                        z: chosen ? 1 : 0
+                                        Behavior on opacity { NumberAnimation { duration: 120 } }
 
                                         Rectangle {
                                             anchors.fill: parent
                                             radius: 6
                                             color: Theme.surface0
-                                            border.width: winMouse.containsMouse ? 2 : 0
-                                            border.color: Theme.blue
+                                            border.width: winMouse.containsMouse || thumb.chosen ? 2 : 0
+                                            border.color: thumb.chosen ? Theme.green : Theme.blue
                                             clip: true
 
                                             ScreencopyView {
                                                 anchors.fill: parent
-                                                anchors.margins: winMouse.containsMouse ? 2 : 0
+                                                anchors.margins: winMouse.containsMouse || thumb.chosen ? 2 : 0
                                                 captureSource: Overview.open && thumb.width > 4 && thumb.height > 4 ? thumb.modelData.wayland : null
                                                 live: Overview.open
                                             }
@@ -300,11 +336,44 @@ PanelWindow {
             }
         }
 
+        // Campo de busca (em cima)
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 60
+            width: Math.max(360, searchRow.implicitWidth + 32)
+            height: 40
+            radius: 20
+            color: Theme.base
+            border.width: 1
+            border.color: win.query !== "" ? Theme.blue : Theme.surface1
+
+            Row {
+                id: searchRow
+                anchors.centerIn: parent
+                spacing: 10
+                BarText { text: "\uf002"; color: Theme.subtext }
+                ThemedText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: win.query !== "" ? win.query : "Digite para buscar janelas"
+                    color: win.query !== "" ? Theme.text : Theme.overlay
+                }
+                ThemedText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: win.query !== ""
+                    text: win.matches.length === 0 ? "nenhuma" : win.matches.length === 1 ? "1 janela" : `${win.matches.length} janelas`
+                    font.pixelSize: 11
+                    color: win.matches.length ? Theme.green : Theme.red
+                }
+            }
+        }
+
         ThemedText {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 40
-            text: "Clique: ir  ·  Arrastar: mover para outra workspace  ·  Clique do meio: fechar  ·  1-5 · Esc"
+            text: win.query !== ""
+                ? "Setas/Tab: escolher  ·  Enter: ir  ·  Esc: limpar a busca"
+                : "Digite: buscar  ·  Clique: ir  ·  Arrastar: mover  ·  Clique do meio: fechar  ·  1-5  ·  Esc"
             font.pixelSize: 12
             color: Theme.overlay
         }
