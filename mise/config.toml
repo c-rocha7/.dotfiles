@@ -2,3 +2,6 @@
 lazydocker = "latest"
 lazygit = "latest"
 usage = "latest"
+
+[settings.self_update]
+auto = true
