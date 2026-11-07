@@ -16,6 +16,10 @@ Column {
     property int cell: 26            // largura de cada dia (o painel da moldura usa maior)
     property int rowHeight: 22
     property int dayFont: 11
+    property var eventDays: ({})     // "2026-11-07" → true: dias com evento (pontinho embaixo)
+    property bool selectable: false  // clicar num dia o escolhe (contorno) e emite daySelected
+    property date selectedDate: new Date()
+    signal daySelected(date day)
 
     // Primeiro dia do mês mostrado (o Date ajusta a virada de ano sozinho).
     readonly property date shown: new Date(date.getFullYear(), date.getMonth() + offset, 1)
@@ -98,12 +102,33 @@ Column {
         delegate: Rectangle {
             required property int day
             required property int month
+            required property int year
             required property bool today
+            readonly property bool hasEvent: root.eventDays[`${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`] === true
+
+            readonly property bool chosen: root.selectable && !today
+                && root.selectedDate.getFullYear() === year && root.selectedDate.getMonth() === month
+                && root.selectedDate.getDate() === day
 
             implicitWidth: root.cell
             implicitHeight: root.rowHeight
             radius: 6
-            color: today ? Theme.blue : "transparent"
+            color: today ? Theme.blue : dayMouse.containsMouse && root.selectable ? Theme.surface1 : "transparent"
+            border.width: chosen ? 2 : 0
+            border.color: Theme.blue
+
+            MouseArea {
+                id: dayMouse
+                anchors.fill: parent
+                enabled: root.selectable
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                    const d = new Date(parent.year, parent.month, parent.day);
+                    root.selectedDate = d;
+                    root.daySelected(d);
+                }
+            }
 
             Text {
                 anchors.centerIn: parent
@@ -114,6 +139,16 @@ Column {
                 font.family: Theme.font
                 font.pixelSize: root.dayFont
                 font.weight: Font.DemiBold
+            }
+            Rectangle {
+                visible: parent.hasEvent
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 2
+                width: 4
+                height: 4
+                radius: 2
+                color: parent.today ? Theme.base : Theme.green
             }
         }
     }

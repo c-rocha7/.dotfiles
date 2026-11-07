@@ -27,6 +27,7 @@ Uso:
 """
 
 import argparse
+import datetime
 import glob
 import json
 import os
@@ -390,6 +391,30 @@ def weather_from_files():
         return None
 
 
+# Agenda: o Quickshell (Agenda.qml → agenda.py) salva os próximos eventos aqui.
+AGENDA_FILE = os.path.join(RUNTIME, "agenda.json")
+
+
+def next_event():
+    """(texto, segundos até começar) do evento com hora que começa em até 1 h ou está
+    acontecendo; None se não houver. Ex.: ("14:00 Reunião", 600) / ("Agora: Reunião", -120)."""
+    try:
+        data = json.load(open(AGENDA_FILE))
+        now = time.time()
+        for e in data.get("eventos", []):
+            if e.get("diaInteiro"):
+                continue
+            start = datetime.datetime.fromisoformat(e["inicio"]).timestamp()
+            end = datetime.datetime.fromisoformat(e["fim"]).timestamp()
+            if start <= now < end:
+                return f"Agora: {e['titulo']}", start - now
+            if 0 < start - now <= 3600:
+                return f"{datetime.datetime.fromtimestamp(start).strftime('%H:%M')} {e['titulo']}", start - now
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    return None
+
+
 def system_line():
     cpu, ram, temp = cpu_percent(), ram_percent(), cpu_temp()
     items = []
@@ -448,6 +473,7 @@ class Daemon:
         self.next_slow = 0              # wifi/bluetooth (a cada 30 s)
         self.slow = {"wifi": "sem Wi-Fi", "bluetooth": "nenhum"}
         self.reminder = None            # lembrete definido pelo usuário (None = automático)
+        self.event_alerted = None       # evento da agenda já avisado (10 min antes)
         self.track = None               # música tocando (para mostrar quando muda)
 
     # --- conteúdo ---------------------------------------------------------
@@ -478,9 +504,19 @@ class Daemon:
         p.set("brilho", self.effective_brightness(), force)
 
     def reminder_text(self):
-        """Página de lembrete: seu lembrete > música tocando > CPU/RAM/temperatura."""
+        """Página de lembrete: seu lembrete > evento da agenda (até 1 h) > música > CPU/RAM/temperatura."""
         if self.reminder:
             return self.reminder
+        event = next_event()
+        if event:
+            text, secs = event
+            # 10 min antes: mostra o lembrete por 15 s (uma vez por evento), se estiver na página de sistema
+            if 0 < secs <= 600 and text != self.event_alerted:
+                self.event_alerted = text
+                if not self.locked and self.page == PAGES["sistema"] and not (self.blanked or self.user_off):
+                    self.page = PAGES["lembrete"]
+                    self.back_to_system_at = time.monotonic() + 15
+            return text[:60]
         track = now_playing()
         if track != self.track:
             self.track = track
