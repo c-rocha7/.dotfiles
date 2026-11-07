@@ -34,5 +34,5 @@ Pill {
         text: root.current?.name ?? ""
     }
 
-    onClicked: QuickSettings.toggleTab("wifi")
+    onClicked: Theme.layout === "moldura" ? ControlCenter.toggle("wifi") : QuickSettings.toggleTab("wifi")
 }

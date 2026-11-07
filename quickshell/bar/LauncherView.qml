@@ -12,6 +12,7 @@
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs
 
 IslandView {
@@ -49,7 +50,63 @@ IslandView {
             return calcResults(q.slice(1));
         if (q.startsWith(">"))
             return commandResults(q.slice(1).trim());
+        if (q.startsWith("/"))
+            return fileResults(q.slice(1).trim());
         return appResults(q.toLowerCase());
+    }
+
+    // ---------- Arquivos: "/nome" (plocate; o índice se atualiza toda noite) ----------
+    // A busca roda em segundo plano 150 ms depois de parar de digitar; os resultados entram
+    // quando ficam prontos (casa do usuário primeiro; pastas ocultas fora, menos .dotfiles e .config).
+    property var fileHits: []
+    property string fileQuery: ""
+    readonly property string home: Quickshell.env("HOME")
+
+    onQueryChanged: if (query.trim().startsWith("/")) fileTimer.restart()
+
+    Timer {
+        id: fileTimer
+        interval: 150
+        onTriggered: {
+            const q = root.query.trim().slice(1).trim();
+            root.fileQuery = q;
+            if (q.length < 2) {
+                root.fileHits = [];
+                return;
+            }
+            fileSearch.running = false;
+            fileSearch.command = ["plocate", "-i", "-b", "-l", "400", "--", ...q.split(/\s+/)];
+            fileSearch.running = true;
+        }
+    }
+    Process {
+        id: fileSearch
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const home = root.home + "/";
+                root.fileHits = text.split("\n")
+                    .filter(l => l !== "" && !l.split("/").some(d => d.startsWith(".") && d !== ".dotfiles" && d !== ".config"))
+                    .sort((a, b) => (b.startsWith(home) ? 1 : 0) - (a.startsWith(home) ? 1 : 0))
+                    .slice(0, 40);
+            }
+        }
+    }
+
+    function fileResults(q) {
+        if (q.length < 2)
+            return [{ name: "Buscar arquivos", desc: "Digite parte do nome, ex.: /relatorio pdf", glyph: "\uf002", run: () => {} }];
+        if (fileHits.length === 0)
+            return [{ name: fileSearch.running ? "Buscando…" : "Nenhum arquivo", desc: "Índice do plocate (sudo updatedb atualiza agora)", glyph: "\uf002", run: () => {} }];
+        return fileHits.map(path => {
+            const slash = path.lastIndexOf("/");
+            const dir = path.slice(0, slash) || "/";
+            return {
+                name: path.slice(slash + 1),
+                desc: (dir.startsWith(root.home) ? "~" + dir.slice(root.home.length) : dir) + "  ·  Shift+Enter abre a pasta",
+                glyph: "\uf15b",
+                run: shift => Quickshell.execDetached(["xdg-open", shift ? dir : path])
+            };
+        });
     }
 
     function close() {
@@ -248,7 +305,7 @@ IslandView {
                         visible: input.text === ""
                         anchors.verticalCenter: parent.verticalCenter
                         text: ({ clipboard: "Buscar no histórico…", windows: "Buscar janelas…" })[Launcher.mode]
-                              ?? "Buscar apps  ·  =conta  ·  >comando  ·  :emoji"
+                              ?? "Buscar apps  ·  =conta  ·  >comando  ·  :emoji  ·  /arquivo"
                         color: Theme.overlay
                         font.pixelSize: 16
                         font.weight: Font.Normal

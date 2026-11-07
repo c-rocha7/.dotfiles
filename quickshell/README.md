@@ -195,3 +195,41 @@ O histórico fica na memória: some ao reiniciar o `qs` ou sair da sessão.
 
 - O Hyprland 0.55+ usa configuração em Lua, então os comandos enviados a ele usam
   a sintaxe Lua, por exemplo: `Hyprland.dispatch('hl.dsp.focus({ workspace = 2 })')`.
+
+## Layout "moldura" (padrão; `Theme.layout`)
+
+Inspirado no Noctalia: barra no topo + borda em volta da tela com os cantos de dentro arredondados
+(concêntricos com as janelas do Hyprland: `frameRadius` 14 = `rounding` 12 + `gaps_out` 2). Painéis
+**brotam da moldura** (mesma cor e contorno, com "orelhas" côncavas onde encontram a borda).
+
+| Arquivo | O que é |
+|---|---|
+| `frame/Frame.qml` | Por monitor: 4 `Exclusion` (reservam espaço nas bordas) + `FrameWindow` |
+| `frame/FrameWindow.qml` | A moldura: barra (workspaces · data/hora · status), painéis, avisos, clique fora/Esc fecha |
+| `frame/FrameShape.qml` | Desenho da moldura (furo arredondado + contorno `frameOutline`) |
+| `frame/FramePanel.qml` | Painel que cresce a partir da borda; tamanho vem do conteúdo (`body`) |
+| `frame/PanelShape.qml` | Fundo do painel com orelhas: `top`, `topRight`, `right` |
+| `frame/AudioView.qml`, `VolumeSlider.qml`, `AudioDevice.qml` + `Audio.qml` | Painel de áudio (pavucontrol): saída/entrada (volume, mudo, dispositivo padrão) e volume por app; "Avançado" abre o pavucontrol. Clique no volume da barra ou `qs ipc call audio toggle`. O PwObjectTracker precisa acompanhar os **candidatos** (pela estrutura: isStream/isSink) antes de filtrar pela classe: sem acompanhar, o nó não carrega `media.class` (`ready=false`) |
+
+Onde fica cada coisa: topo (launcher, gravação, wallpapers, atalhos, energia, calendário + mídia ao clicar
+na hora); canto direito (notificações, Wi-Fi/Bluetooth, áudio, notificação nova); borda direita (volume, brilho,
+microfone, Caps Lock, GameMode). As telas são as mesmas de `bar/` (reaproveitadas). `Theme.layout: "ilha"`
+volta para a ilha dinâmica.
+
+### Painéis e extras da moldura
+
+| Arquivo | O que é |
+|---|---|
+| `ControlCenter.qml` + `frame/ControlCenterView.qml`, `CcTile.qml`, `BrightnessSlider.qml`, `BatteryView.qml` | Central de controle (⚙ na barra; ícones de Wi-Fi/BT/volume/bateria abrem a página deles): botões Wi-Fi, Bluetooth, Não perturbe, Luz noturna, Microfone, Energia; volume e brilho; bateria; mídia. Subpáginas Wi-Fi, Bluetooth, Áudio, Bateria (consumo, saúde, perfis). `qs ipc call control toggle` / `mostrar wifi` |
+| `NightLight.qml` | Luz noturna (hyprsunset): o estado fica aqui (o hyprsunset informa a última temperatura mesmo depois de `identity`) |
+| `frame/StatusCluster.qml` | Botão da central na barra: só os ícones de Wi-Fi, Bluetooth e volume (clique abre a central; rolagem = volume; meio = mudo) |
+| `CalendarPanel.qml` | Painel do calendário (duas colunas: calendário · clima + mídia); `qs ipc call calendar toggle` |
+| `frame/MediaCard.qml` | Mídia no calendário: capa, progresso arrastável, anterior/tocar/próximo, ⇄ troca de player (a posição do MPRIS é pedida a cada 1 s) |
+| `frame/VerticalLevel.qml` | Aviso vertical de volume/brilho na borda direita |
+| `frame/FrameWorkspaces.qml` | Workspaces com os ícones dos apps (até 3) |
+| `Weather.qml` + `frame/WeatherCard.qml` | Clima: cidade pelo IP (ipwho.is; reserva ipapi.co), previsão Open-Meteo a cada 30 min; salva em `$XDG_RUNTIME_DIR/clima-*.json` (só substitui com resposta boa) — a minitela lê de lá |
+| `bar/NotificationCenter.qml` | Agrupada por app (2 últimas; "+N" expande; × limpa o grupo); botões de ação já vinham do cartão |
+| `bar/LauncherView.qml` | `/nome` busca arquivos (plocate; casa primeiro; pastas ocultas fora, menos `.dotfiles`/`.config`); Enter abre, Shift+Enter abre a pasta |
+
+Transparência: moldura + fundos dos painéis numa camada só (`background` no FrameWindow, `Theme.frameOpacity`)
+para não haver costura escura onde o painel encosta; desfoque pela `layer_rule` "moldura" no `hyprland.lua`.

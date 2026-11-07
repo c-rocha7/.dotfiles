@@ -29,6 +29,19 @@ Singleton {
     readonly property int radius: 10
     readonly property int gap: 5        // espaço entre blocos
 
+    // Layout: "moldura" (barra no topo + borda em volta da tela, cantos de dentro arredondados)
+    // ou "ilha" (a ilha dinâmica sozinha no topo). Trocar e recarregar: SUPER+SHIFT+Esc.
+    readonly property string layout: "moldura"
+    readonly property color frame: "#11111b"   // cor da moldura (a mesma da ilha)
+    readonly property int frameBar: 38         // altura da barra de cima
+    readonly property int frameBorder: 8       // espessura das bordas laterais e de baixo
+    readonly property int frameRadius: 14      // raio dos cantos de dentro (= rounding 12 + gaps_out 2 do Hyprland)
+    readonly property color frameOutline: "#45475a"  // contorno do lado de dentro (separa a moldura das janelas)
+    readonly property real frameOutlineWidth: 1.5
+    // Moldura e fundos dos painéis translúcidos (o Hyprland desfoca o que está atrás: layer_rule
+    // "moldura" no hyprland.lua). 1 = opaco.
+    readonly property real frameOpacity: 0.86
+
     // Animações da ilha (ms)
     readonly property int resizeDuration: 450
     readonly property int fadeDuration: 180

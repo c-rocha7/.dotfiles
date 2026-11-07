@@ -139,7 +139,11 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - `hypridle`: tela de bloqueio aos 15 min (Quickshell, hyprlock de reserva), tela apaga aos 16 min,
     **suspende aos 30 min só na bateria** (`scripts/suspend-bateria.sh`). Suspensão em S3 (`deep`), testada (menu e tampa).
     `hyprsunset`: luz noturna por horário (`hypr/hyprsunset.conf`).
-- **Quickshell = "ilha dinâmica"** (`quickshell/`, ver `quickshell/README.md`): barra, notificações
+- **Quickshell, layout "moldura"** (padrão, `Theme.layout`; `"ilha"` = a ilha antiga): barra + borda em volta da
+  tela, painéis que brotam da moldura (`quickshell/frame/`, ver README): central de controle (ícones Wi-Fi/BT/volume
+  na barra; energia no canto esquerdo; Wi-Fi/BT/áudio
+  tipo pavucontrol/brilho/luz noturna/bateria), mídia com capa, clima (IP + Open-Meteo, também na minitela), notificações
+  agrupadas, `/arquivo` no launcher, moldura translúcida com desfoque. Mesmas funções da ilha: notificações
   (substitui o swaync), launcher (`SUPER+Space`: apps, `:emoji`, `=conta`, `>comando`; `SUPER+V` clipboard;
   `SUPER+Tab` janelas), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
   gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),

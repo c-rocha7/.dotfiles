@@ -13,7 +13,9 @@ Column {
 
     property date date: new Date()   // hoje (vem do relógio da ilha)
     property int offset: 0           // quantos meses para frente/trás do atual
-    readonly property int cell: 26
+    property int cell: 26            // largura de cada dia (o painel da moldura usa maior)
+    property int rowHeight: 22
+    property int dayFont: 11
 
     // Primeiro dia do mês mostrado (o Date ajusta a virada de ano sozinho).
     readonly property date shown: new Date(date.getFullYear(), date.getMonth() + offset, 1)
@@ -99,7 +101,7 @@ Column {
             required property bool today
 
             implicitWidth: root.cell
-            implicitHeight: 22
+            implicitHeight: root.rowHeight
             radius: 6
             color: today ? Theme.blue : "transparent"
 
@@ -110,7 +112,7 @@ Column {
                     : parent.month === grid.month ? Theme.text
                     : Theme.overlay
                 font.family: Theme.font
-                font.pixelSize: 11
+                font.pixelSize: root.dayFont
                 font.weight: Font.DemiBold
             }
         }

@@ -42,6 +42,6 @@ Pill {
         if (mouse.button === Qt.RightButton)
             Quickshell.execDetached(["blueman-manager"]);
         else
-            QuickSettings.toggleTab("bluetooth");
+            Theme.layout === "moldura" ? ControlCenter.toggle("bluetooth") : QuickSettings.toggleTab("bluetooth");
     }
 }

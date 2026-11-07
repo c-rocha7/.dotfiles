@@ -1,5 +1,5 @@
 // Volume da saída de som e do microfone (via PipeWire).
-// Clique esquerdo: abre o pavucontrol. Clique direito: muta/desmuta.
+// Clique esquerdo: painel de áudio da moldura (no layout "ilha", o pavucontrol). Direito: muta/desmuta.
 // Rolagem: aumenta/diminui 5%.
 
 import QtQuick
@@ -38,6 +38,8 @@ Pill {
         if (mouse.button === Qt.RightButton) {
             if (sink?.audio)
                 sink.audio.muted = !sink.audio.muted;
+        } else if (Theme.layout === "moldura") {
+            ControlCenter.toggle("audio");
         } else {
             Quickshell.execDetached(["pavucontrol"]);
         }

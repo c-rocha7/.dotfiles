@@ -2,17 +2,24 @@
 // (necessário para os menus da bandeja: Wi-Fi, Spotify, Vesktop...)
 
 // Ponto de entrada do Quickshell (comando: qs).
-// Cria uma barra para cada monitor conectado e a tela de bloqueio.
+// Cria a moldura (ou a ilha, conforme Theme.layout) em cada monitor e a tela de bloqueio.
 
 import Quickshell
+import qs
 import qs.bar
+import qs.frame
 import qs.lock
 
 ShellRoot {
+    // Layout escolhido em Theme.layout: "moldura" (padrão) ou "ilha" (a de antes).
     Variants {
-        model: Quickshell.screens
+        model: Theme.layout === "moldura" ? Quickshell.screens : []
 
-        // Cada monitor recebe o seu Bar; o monitor chega em "modelData".
+        // Cada monitor recebe a sua moldura; o monitor chega em "modelData".
+        Frame {}
+    }
+    Variants {
+        model: Theme.layout === "ilha" ? Quickshell.screens : []
         Bar {}
     }
 

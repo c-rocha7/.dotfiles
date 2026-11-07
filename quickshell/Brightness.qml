@@ -21,6 +21,16 @@ Singleton {
         reader.running = true;
     }
 
+    // Define o brilho (0–100, na mesma escala dos atalhos). Usado pelo controle da central.
+    function set(pct) {
+        setter.command = ["bash", "-c", `~/.config/hypr/scripts/brightness.sh set ${Math.round(pct)}`];
+        setter.running = true;
+    }
+
+    Process {
+        id: setter
+    }
+
     // "brightness.sh get" devolve a porcentagem na escala do script (0–100).
     Process {
         id: reader
