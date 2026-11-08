@@ -5,3 +5,6 @@ usage = "latest"
 
 [settings.self_update]
 auto = true
+
+[settings.upgrade]
+auto_prune = false
