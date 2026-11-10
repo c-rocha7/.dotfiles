@@ -1,7 +1,7 @@
 # Contexto do notebook: Positivo Vision R15M (Arch Linux + Hyprland)
 
 > Contexto para o Claude Code: o que foi feito na instalação e configuração, o estado atual e o que falta.
-> Atualizado em 2026-11-05.
+> Atualizado em 2026-11-10.
 
 ## 0. Como trabalhar com o usuário
 
@@ -138,6 +138,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
     `'hl.dsp.dpms({action = "off"})'`, `'hl.dsp.exec_cmd("...")'`.
   - Monitor externo: regra genérica (preferred, à direita); `SUPER+SHIFT+P`/`XF86Display` alterna estender →
     espelhar → só externa → só notebook (`scripts/monitor.sh`, aplica com `hyprctl eval 'hl.monitor{...}'`).
+  - **Mouses sem aceleração**: `accel_profile = "flat"` no bloco `input` (vale para qualquer mouse, até os novos);
+    só o touchpad (`pnp0c50:0b-093a:0255-touchpad`) volta ao `adaptive` por um `hl.device`. Conferir: `hyprctl devices`.
   - Tecla principal **SUPER**. Todo atalho tem `description = "Categoria · O que faz"` (aparece no guia `SUPER+/`).
   - `hypr/scripts/`: `brightness.sh` (0% = mínimo útil da tela, passos de 5%), `screenshot.sh`, `record.sh`.
   - **Janelas escondidas** (`scripts/scratchpad.sh`, workspaces especiais): `SUPER+'` terminal (classe
