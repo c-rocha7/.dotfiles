@@ -287,7 +287,9 @@ hl.config({
 
         follow_mouse       = 1,
 
+        -- Todos os mouses sem aceleração (o touchpad volta ao adaptive abaixo)
         sensitivity        = 0,
+        accel_profile      = "flat",
 
         touchpad           = {
             natural_scroll = false,
@@ -313,10 +315,10 @@ hl.gesture({
     action = function() hl.exec_cmd("qs ipc call overview close") end,
 })
 
+-- Touchpad do notebook mantém a aceleração (padrão do libinput)
 hl.device({
-    name          = "lxddz-2.4g-8k-hs-receiver--1",
-    sensitivity   = 0,
-    accel_profile = "flat",
+    name          = "pnp0c50:0b-093a:0255-touchpad",
+    accel_profile = "adaptive",
 })
 
 
