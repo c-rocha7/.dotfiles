@@ -37,9 +37,11 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 - Subvolumes: `@` (/), `@home`, `@log`, `@pkg` (cache do pacman), **`@nix`** (/nix), **`@docker`**
   (/var/lib/docker), **`@snapshots`** (/.snapshots). Opções `noatime,compress=zstd:3,ssd,discard=async,space_cache=v2`;
   fstab sem `subvolid=`. Sem swap em disco: só zram.
-- **Snapper** (config `root`, só o `@`): snap-pac (antes/depois do pacman), timeline 5h/7d/2s/1m,
-  10 do pacman, grupo wheel lê sem sudo. GUI: `btrfs-assistant`.
-- **Snapper `home`** (`install/snapshots-home.sh`): `/home` de hora em hora (24h/7d/4s/3m), em `/home/.snapshots`.
+- **Snapper** (config `root`, só o `@`): só o snap-pac (antes/depois do pacman), **as 5 últimas atualizações**
+  (10 snapshots), sem timeline nem "importantes"; grupo wheel lê sem sudo. GUI: `btrfs-assistant`.
+  Limites em `install/limite-snapshots.sh` (também limpa o cache do pacman; `desfazer` volta o backup).
+- **Snapper `home`** (`install/snapshots-home.sh`): `/home` de hora em hora, guarda **2 por hora + 3 por dia**, em `/home/.snapshots`.
+  Arquivos grandes que mudam muito (discos de VM) multiplicam o espaço nos snapshots: ponha num subvolume próprio.
   `~/.cache` e `~/.local/share/Steam` são subvolumes próprios (fora dos snapshots). **Não é backup** (mesmo SSD).
   Recuperar: copiar de `/home/.snapshots/<N>/snapshot/7aauac/...`.
 - `/nix` e Docker ficam **fora** do `@` de propósito: restaurar o `/` não pode quebrar o Nix.
@@ -58,7 +60,8 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - O kernel é gerenciado pelo **`limine-update`** — não use `mkinitcpio -P`.
   - Snapshots "pre" aparecem no menu (submenu **Snapshots**); iniciar por um deles usa overlay
     (só leitura) e mostra o aviso **"Restaurar agora"** (`limine-snapper-restore`).
-  - Limite de 80% da ESP (1 GiB); sem `inotify-tools` o plugin do snapper faz a sincronização.
+  - Limite de 80% da ESP (1 GiB). O `limine-snapper-watcher` (inotify) sincroniza o menu a cada snapshot criado/apagado
+    e trava a config do snapper por um instante: `snapper cleanup` em sequência pode dar "A configuração está bloqueada".
 - **Secure Boot ativo** (`install/fase4-secure-boot.sh`): só o Limine é assinado (sbctl, chaves em `/var/lib/sbctl`,
   cópia em `/home/.sbctl-backup`); o hash do `limine.conf` vai gravado no Limine (`ENABLE_ENROLL_LIMINE_CONFIG=yes`)
   e o conf tem o hash do kernel/initramfs (`ENABLE_VERIFICATION=yes`). Kernel não é assinado. Editor do menu desligado.

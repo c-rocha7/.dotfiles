@@ -46,10 +46,10 @@ mountpoint /.snapshots
 echo ">> 4/7 Limites e permissões"
 snapper -c root set-config \
     ALLOW_GROUPS=wheel SYNC_ACL=yes \
-    NUMBER_CLEANUP=yes NUMBER_LIMIT=10 NUMBER_LIMIT_IMPORTANT=5 \
-    TIMELINE_CREATE=yes TIMELINE_CLEANUP=yes \
-    TIMELINE_LIMIT_HOURLY=5 TIMELINE_LIMIT_DAILY=7 TIMELINE_LIMIT_WEEKLY=2 \
-    TIMELINE_LIMIT_MONTHLY=1 TIMELINE_LIMIT_QUARTERLY=0 TIMELINE_LIMIT_YEARLY=0
+    NUMBER_CLEANUP=yes NUMBER_LIMIT=10 NUMBER_LIMIT_IMPORTANT=0 \
+    TIMELINE_CREATE=no TIMELINE_CLEANUP=yes \
+    TIMELINE_LIMIT_HOURLY=0 TIMELINE_LIMIT_DAILY=0 TIMELINE_LIMIT_WEEKLY=0 \
+    TIMELINE_LIMIT_MONTHLY=0 TIMELINE_LIMIT_QUARTERLY=0 TIMELINE_LIMIT_YEARLY=0  # limites atuais: install/limite-snapshots.sh
 
 echo ">> 5/7 Ativando os timers (snapshots periódicos e limpeza)"
 systemctl enable --now snapper-timeline.timer snapper-cleanup.timer

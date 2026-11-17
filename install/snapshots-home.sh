@@ -8,7 +8,7 @@
 #    (mudam o tempo todo / são grandes e se baixam de novo). O conteúdo é copiado com reflink
 #    (instantâneo, sem ocupar espaço a mais).
 # 2. snapper create-config para /home (cria /home/.snapshots)
-# 3. limites: 24 por hora, 7 por dia, 4 por semana, 3 por mês; grupo wheel lê sem sudo
+# 3. limites: 2 por hora + 3 por dia (install/limite-snapshots.sh); grupo wheel lê sem sudo
 # 4. primeiro snapshot
 #
 # Recuperar um arquivo: copie de /home/.snapshots/<N>/snapshot/7aauac/... (ou use o btrfs-assistant).
@@ -67,9 +67,9 @@ fi
 snapper -c home set-config \
     ALLOW_GROUPS="wheel" SYNC_ACL="yes" \
     TIMELINE_CREATE="yes" TIMELINE_CLEANUP="yes" TIMELINE_MIN_AGE="1800" \
-    TIMELINE_LIMIT_HOURLY="24" TIMELINE_LIMIT_DAILY="7" TIMELINE_LIMIT_WEEKLY="4" \
-    TIMELINE_LIMIT_MONTHLY="3" TIMELINE_LIMIT_YEARLY="0" \
-    NUMBER_CLEANUP="yes" NUMBER_LIMIT="10" SPACE_LIMIT="0.3" FREE_LIMIT="0.2"
+    TIMELINE_LIMIT_HOURLY="2" TIMELINE_LIMIT_DAILY="3" TIMELINE_LIMIT_WEEKLY="0" \
+    TIMELINE_LIMIT_MONTHLY="0" TIMELINE_LIMIT_YEARLY="0" \
+    NUMBER_CLEANUP="yes" NUMBER_LIMIT="0" SPACE_LIMIT="0.3" FREE_LIMIT="0.2"
 systemctl is-enabled --quiet snapper-timeline.timer || systemctl enable --now snapper-timeline.timer
 systemctl is-enabled --quiet snapper-cleanup.timer || systemctl enable --now snapper-cleanup.timer
 
