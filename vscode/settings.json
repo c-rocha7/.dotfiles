@@ -275,8 +275,7 @@
   "claudeCode.hideOnboarding": true,
   "mise.autoDetectMiseBinPath": false,
   "qt-core.showWelcomePageOnActivation": false,
-
-  /* Qt QML: servidor de linguagem do Qt 6 do sistema (pacote qt6-declarative) */
   "qt-qml.qmlls.customExePath": "/usr/lib/qt6/bin/qmlls",
   "qt-qml.doNotAskForQmllsDownload": true,
+  "keyboard.layout": "00000416",
 }
