@@ -26,6 +26,7 @@ Pill {
             PowerMenu.close();
             Cheatsheet.close();
             Wallpaper.close();
+            Updates.close();
         }
     }
 }

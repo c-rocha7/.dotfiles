@@ -1,5 +1,5 @@
 // Atualizações pendentes (Updates.qml): ícone + total. Só aparece quando há alguma.
-// Clique: abre o terminal com "atualizar". Clique direito: confere de novo.
+// Clique: abre/fecha o painel com a lista (UpdatesView). Clique direito: confere de novo.
 
 import QtQuick
 import qs
@@ -9,7 +9,7 @@ Pill {
 
     visible: Updates.count > 0
     clickable: true
-    color: hovered ? Theme.surface1 : Theme.base
+    color: Updates.open || hovered ? Theme.surface1 : Theme.base
 
     BarText {
         text: Updates.checking ? "\u{f0450}" : "\u{f03d7}"   // girando / pacote com seta
@@ -28,7 +28,13 @@ Pill {
     onClicked: mouse => {
         if (mouse.button === Qt.RightButton)
             Updates.check();
-        else
-            Updates.run();
+        else {
+            const was = Updates.open;
+            NotificationService.centerOpen = false;
+            ControlCenter.close();
+            QuickSettings.close();
+            Audio.close();
+            Updates.open = !was;
+        }
     }
 }

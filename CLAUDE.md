@@ -173,7 +173,7 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   `SUPER+SHIFT+Tab` lista de janelas), **visão geral das workspaces** (`SUPER+Tab` ou 3 dedos para cima;
   miniaturas ao vivo, arrastar move a janela), Wi-Fi/Bluetooth, menu de energia (`SUPER+X`), wallpapers (`SUPER+W`),
   gravação (`SUPER+R` / `SUPER+SHIFT+R`), guia de atalhos (`SUPER+/`), tela de bloqueio (`SUPER+L`, PAM `hyprlock`),
-  atualizações pendentes na barra (`Updates.qml`; clique roda o `atualizar`). Sem o `qs` rodando, os atalhos dele
+  atualizações pendentes na barra (`Updates.qml`; clique abre o painel com a lista de pacotes e o botão "Atualizar tudo"). Sem o `qs` rodando, os atalhos dele
   iniciam o `qs` de novo (não há mais rofi/wlogout de reserva).
   - Detalhes técnicos (singletons, bandeja, logs): `quickshell/CLAUDE.md`.
 - Visual: **cores a partir do wallpaper** (`matugen/`: a cada troca o waypaper roda `aplicar.sh` pelo `post_command`;

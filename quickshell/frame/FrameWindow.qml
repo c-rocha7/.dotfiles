@@ -4,7 +4,7 @@
 // Barra:   workspaces (esquerda) · data e hora (centro, abre o calendário) · status (direita)
 // Painéis (FramePanel, brotam da moldura; reaproveitam as telas de qs.bar):
 //   topo, centro ......... launcher, gravação, wallpapers, atalhos, energia, calendário + clima + mídia
-//   canto direito ........ central de notificações, central de controle (Wi-Fi, Bluetooth, áudio, bateria), notificação nova
+//   canto direito ........ central de notificações, atualizações, central de controle (Wi-Fi, Bluetooth, áudio, bateria), notificação nova
 //   borda direita ........ volume, brilho e avisos rápidos (microfone, Caps Lock, GameMode)
 // Clique fora ou Esc fecha. O teclado só é pego com um painel aberto.
 
@@ -52,6 +52,7 @@ PanelWindow {
         : ""
     // Painel do canto direito
     readonly property string sidePanel: NotificationService.centerOpen ? "center"
+        : focusedScreen && Updates.open ? "updates"
         : focusedScreen && (ControlCenter.open || QuickSettings.open || Audio.open) ? "control"
         : ""
     // Página da central: a pedida, ou Wi-Fi/Bluetooth/áudio abertos por atalho/IPC
@@ -71,6 +72,7 @@ PanelWindow {
         Audio.close();
         ControlCenter.close();
         CalendarPanel.open = false;
+        Updates.close();
     }
 
     WlrLayershell.keyboardFocus: anyPanel ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
@@ -172,6 +174,7 @@ PanelWindow {
         Region { item: powerPanel }
         Region { item: calendarPanel }
         Region { item: centerPanel }
+        Region { item: updatesPanel }
         Region { item: controlPanel }
         Region { item: notificationPanel }
         Region { item: osdPanel }
@@ -383,6 +386,16 @@ PanelWindow {
         shown: win.sidePanel === "center"
         body: centerView
         NotificationCenter { id: centerView; shown: centerPanel.shown }
+    }
+    FramePanel {
+        background: background
+        attach: "topRight"
+        x: win.width - Theme.frameBorder - fullWidth
+        y: Theme.frameBar
+        id: updatesPanel
+        shown: win.sidePanel === "updates"
+        body: updatesView
+        UpdatesView { id: updatesView; shown: updatesPanel.shown }
     }
     FramePanel {
         background: background

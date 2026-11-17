@@ -45,7 +45,7 @@ iniciam o `qs` de novo.
 | `Keyboard.qml` | Estado do Caps Lock, lido da luz do teclado (`/sys/class/leds/*::capslock`) |
 | `QuickSettings.qml` | Estado do painel de conexões (aba Wi-Fi/Bluetooth) e comandos `qs ipc call network ...` |
 | `Battery.qml` | Bateria (UPower) e notificação de bateria fraca em 15% e 5% |
-| `Updates.qml` | Atualizações pendentes (sistema, AUR, Flatpak) a cada hora; `qs ipc call updates refresh\|run` |
+| `Updates.qml` + `bar/UpdatesView.qml` | Atualizações pendentes (sistema, AUR, Flatpak) a cada hora; clique na barra abre o painel com a lista de pacotes (versão atual → nova) e "Atualizar tudo"; `qs ipc call updates refresh\|run\|toggle` |
 | `GameMode.qml` | Jogos: perfil Desempenho enquanto o GameMode está ativo, aviso e ícone na barra (`qs ipc call gamemode started\|stopped`, chamado por `gamemode/hook.sh`) |
 | `Brightness.qml` | Brilho da tela na escala do `hypr/scripts/brightness.sh` (0% = mínimo útil da tela), avisado via `qs ipc call brightness changed` |
 | `NotificationService.qml` | Servidor de notificações (substitui o swaync): histórico, "não perturbe", ícones e comandos `qs ipc` |
