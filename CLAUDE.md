@@ -1,7 +1,7 @@
 # Contexto do notebook: Positivo Vision R15M (Arch Linux + Hyprland)
 
 > Contexto para o Claude Code: o que foi feito na instalação e configuração, o estado atual e o que falta.
-> Atualizado em 2026-11-10.
+> Atualizado em 2026-11-18.
 
 ## 0. Como trabalhar com o usuário
 
@@ -29,11 +29,14 @@
 
 UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM off (UEFI), **Fast Boot on**,
 **Secure Boot on** (chaves próprias do sbctl + Microsoft; `install/fase4-secure-boot.sh`). Entradas UEFI: `Limine` (`\EFI\limine\limine_x64.efi`) e
-`UEFI OS` (`\EFI\BOOT\BOOTX64.EFI`, também o Limine). O firmware às vezes reordena o boot sozinho.
+`UEFI OS` (`\EFI\BOOT\BOOTX64.EFI`, também o Limine) e `Windows Boot Manager` (`Boot0000`, dual boot).
+Ordem: `Limine, UEFI OS, Windows`. O firmware (e o Windows) às vezes reordenam o boot sozinhos.
 
 ## 3. Disco (Btrfs) e snapshots
 
-- GPT: `nvme0n1p1` 1 GiB FAT32 em `/boot` (ESP); `nvme0n1p2` Btrfs, UUID `61b69d0d-6939-4d01-9bfd-a87c1bf4d558`.
+- GPT: `nvme0n1p1` 1 GiB FAT32 em `/boot` (ESP, compartilhada com o Windows: `EFI/Microsoft`, ~32 MB);
+  `nvme0n1p2` 375,9 GiB Btrfs, UUID `61b69d0d-6939-4d01-9bfd-a87c1bf4d558`; `nvme0n1p3` 16 MB reservada da Microsoft;
+  `nvme0n1p4` 100 GiB NTFS (**Windows 11**, dual boot desde 18/11; ver `docs/dual-boot-windows.md`).
 - Subvolumes: `@` (/), `@home`, `@log`, `@pkg` (cache do pacman), **`@nix`** (/nix), **`@docker`**
   (/var/lib/docker), **`@snapshots`** (/.snapshots). Opções `noatime,compress=zstd:3,ssd,discard=async,space_cache=v2`;
   fstab sem `subvolid=`. Sem swap em disco: só zram.
@@ -70,6 +73,17 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
   - **Nunca edite o `limine.conf` à mão**: o hash não bate e o boot trava ("CHECKSUM MISMATCH"). Recuperar:
     BIOS → Secure Boot off; ver o cabeçalho do script. Conferir: `sudo bash install/fase4-secure-boot.sh status`.
   - "EFI fallback" fora do menu (`FIND_BOOTLOADERS=no` + entrada removida).
+- **Dual boot com o Windows 11** (`install/dual-boot-windows.sh`, guia em `docs/dual-boot-windows.md`):
+  entrada **"Windows 11"** no fim do menu, criada com `limine-entry-tool --add-efi` (etapa `limine-windows`;
+  remover: `limine-windows-remover`). `protocol: efi` com `path: boot():/EFI/Microsoft/Boot/bootmgfw.efi`
+  **sem hash** (o Limine 12 dispensa hash em chainload EFI: a BIOS confere a assinatura da Microsoft no `db`),
+  então atualizações do Windows não travam a entrada. O `sbctl verify` lista os arquivos da Microsoft como
+  "not signed": normal (não são assinados pelas chaves do sbctl).
+  - Depois de o Windows mexer no boot (instalação/atualização grande): `dual-boot-windows.sh pos-windows`
+    (Limine em 1º + `BOOTX64.EFI` de volta ao Limine assinado). Reiniciar direto no Windows: etapa `windows`
+    (`efibootmgr --bootnext`). Backups do `limine.conf` e da tabela de partições em `/home/.dual-boot-backup/`.
+  - BitLocker: iniciar o Windows ora pelo Limine, ora pela BIOS, ou mexer nas chaves do Secure Boot, pede a
+    chave de recuperação do Windows.
 - **Visual do menu** (`install/limine-tema.sh`): bloco marcado no topo do `limine.conf` (as ferramentas mantêm o
   cabeçalho): wallpaper = desenho do ly, Catppuccin, Terminus negrito 2x, timeout 3. Arquivos em `/boot/limine-tema/`
   com `#hash` no caminho (Secure Boot: sem hash é ignorado, hash errado trava). Mudou o desenho? Rode o
@@ -221,3 +235,5 @@ UMA 4 GB, Network Stack off, SVM on, **FlexiCharger: carga para em 80%**, CSM of
 2. Backup do `/home` (precisa de destino: HD externo ou nuvem).
 3. SSH só com chave (copiar a chave do desktop; `install/ssh-somente-chave.sh`).
 4. Unificar dotfiles na `main` com `hosts/` (no desktop).
+5. Windows 11 (dual boot): testar o boot pela entrada "Windows 11" do Limine e fazer os ajustes dentro do
+   Windows (Inicialização rápida off, relógio `RealTimeIsUniversal`, guardar a chave do BitLocker): `docs/dual-boot-windows.md`, passo 3.
